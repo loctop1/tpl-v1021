@@ -1,0 +1,127 @@
+{
+  "author": "minhnh",
+  "sourceLink": "https://sudes-dino.mysapo.net/",
+  "domain": {
+    "storeId": 15113,
+    "name": "V1021.minhnhweb.bot3s.com",
+      "alias": "V1021.minhnhweb.bot3s.com"
+  },
+  "banners": {
+    "BANNER_HOME_PRIMARY": {
+      "name": "Banner slide chính trang chủ",
+      "description": "1920 × 694",
+      "size": "1920 × 694"
+    },
+    "BANNER_HOME_SUB": {
+      "name": "Banner nhỏ dưới banner chính",
+      "description": "600 × 307",
+      "size": "600 × 307"
+    },
+    "BANNER_HOME_PRODUCT": {
+      "name": "Banner sản phẩm nổi bật trang chủ",
+      "description": "1570 × 164",
+      "size": "1570 × 164"
+    },
+    "BANNER_BREADCRUMB": {
+      "name": "Banner Thanh BreadCrumb",
+      "description": "1570 × 165",
+      "size": "1570 × 165"
+    },
+    "BANNER_PRODUCT_DETAIL": {
+      "name": "Banner dọc trang chi tiết sản phẩm",
+      "description": "375 × 525",
+      "size": "375 × 525"
+    }
+  },
+  "contents": {
+    "HOME": {
+      "name": "Trang chủ",
+      "keys": {
+        "META_TITLE": {
+          "content": "Phần mềm quản lý bán hàng Nhanh.vn"
+        },
+        "META_DESCRIPTION": {
+          "content": "Phần mềm quản lý bán hàng Nhanh.vn giúp bạn dễ dàng quản lý kho hàng, đơn hàng, khách hàng, tiết kiệm thời gian, tăng doanh thu, giảm chi phí cho việc quản lý cửa hàng"
+        },
+        "META_KEYWORDS": {
+          "content": "Phần mềm quản lý bán hàng, khách hàng, tiết kiệm thời gian, tăng doanh thu, giảm chi phí cho việc quản lý cửa hàng"
+        },
+        "HOTLINE": {
+          "content": "19002812"
+        },
+        "PROMOTION_ID": {
+          "content": ""
+        }
+      }
+    },
+    "FOOTER": {
+      "name": "Chân trang",
+      "keys": {
+        "FOOTER_TITLE_1": {
+          "content": "Về chúng tôi"
+        },
+        "FOOTER_CONTENT_1": {
+          "type": "TEXT_EDITOR",
+          "content": "<ul class=\"fContentMid-content\"><li class=\"fContentMid-item\"><a href=\"\" class=\"s-popularLink\">Trang chủ</a></li><li class=\"fContentMid-item\"><a href=\"/san-pham\" class=\"s-popularLink\">Sản phẩm</a></li><li class=\"fContentMid-item\"><a href=\"/news\" class=\"s-popularLink\">Tin tức</a></li><li class=\"fContentMid-item\"><a href=\"/contact\" class=\"s-popularLink\">Liên hệ</a></li><li class=\"fContentMid-item\"><a href=\"/he-thong-cua-hang\" class=\"s-popularLink\">Hệ thống cửa hàng</a></li></ul>"
+        },
+        "FOOTER_TITLE_2": {
+          "content": "Chính sách khách hàng"
+        },
+        "FOOTER_CONTENT_2": {
+          "type": "TEXT_EDITOR",
+          "content": "<ul class=\"fContentRight-content\"><li class=\"fContentRight-item\"><a href=\"\" class=\"s-popularLink\">Hướng dẫn đổi trả</a></li><li class=\"fContentRight-item\"><a href=\"\" class=\"s-popularLink\">chính sách thanh toán</a></li><li class=\"fContentRight-item\"><a href=\"\" class=\"s-popularLink\">Bảo mật thông tin cá nhân</a></li><li class=\"fContentRight-item\"><a href=\"\" class=\"s-popularLink\">Chương trình cộng tác viên</a></li></ul>"
+        },
+        "ADDRESS": {
+          "content": "Tầng 3, Hà Thành Plaza, 102 Thái Thịnh, Phường Trung Liệt, Quận Đống Đa, Hà Nội"
+        },
+        "EMAIL": {
+          "content": "contact@nhanh.vn"
+        },
+        "SLOGAN": {
+          "content": "Đồ ăn Dino ăn là mập nhưng mà ngonnn!!!"
+        },
+        "SOCIAL_FACEBOOK": {
+          "content": "https://www.facebook.com/nhanh.vn"
+        },
+        "SOCIAL_YOUTUBE": {
+          "content": ""
+        },
+        "SOCIAL_INSTAGRAM": {
+          "content": ""
+        },
+        "SOCIAL_TWITTER": {
+          "content": ""
+        },
+        "POLICY_FOOTER_TITLE_1": {
+          "content": "Đặt hàng"
+        },
+        "POLICY_FOOTER_TITLE_2": {
+          "content": "Thanh toán"
+        },
+        "POLICY_FOOTER_TITLE_3": {
+          "content": "Vận chuyển"
+        },
+        "POLICY_FOOTER_CONTENT": {
+          "content": "Dễ dàng - nhanh chóng"
+        }
+      }
+    },
+    "PRODUCT_DETAIL": {
+      "name": "Trang chi tiết sản phẩm",
+      "keys": {
+        "POLICY": {
+          "type": "TEXT_EDITOR",
+          "content": ""
+        }
+      }
+    },
+    "CONTACT": {
+      "name": "Trang liên hệ",
+      "keys": {
+        "COMPANY_NAME": {
+          "content": "DINO SNACK"
+        }
+      }
+    }
+  }
+}

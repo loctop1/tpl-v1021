@@ -1,0 +1,71 @@
+.contact-info p {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.contact-info_title {
+  font-size: 20px !important;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 10px !important;
+  border-bottom: 1px solid #f1f1f1;
+  padding-bottom: 5px;
+  color: #f93;
+}
+.contact-form_title {
+  font-size: 15px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 13px;
+}
+.contact-form label {
+  display: none;
+}
+.contact-form input, .contact-form textarea {
+  border: 1px solid #e1e1e1;
+  width: 100%;
+  margin-bottom: 15px;
+  outline: none;
+  font-size: 14px;
+  border-radius: 5px;
+}
+.contact-form li {
+  width: 100%;
+  display: inline-block;
+}
+.contact-form li:nth-child(2) {
+  width: 51%;
+  padding-right: 2%;
+}
+.contact-form li:nth-child(3) {
+  width: 49%;
+}
+.contact-form li.btns input {
+  background: #f93;
+  color: #fff;
+  border: initial;
+  padding: 0 20px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+.contact-form input {
+  padding: 5px 20px;
+}
+.contact-form textarea {
+  padding: 10px 20px;
+}
+
+.fContentLeft-link {
+  color: #f93;
+  text-decoration: none;
+}
+.fContentLeft-link:hover {
+  color: #630;
+}
+
+.contactWrapper {
+  margin-bottom: 30px !important;
+}
+
+/*# sourceMappingURL=contact.css.map */

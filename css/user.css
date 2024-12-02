@@ -1,0 +1,330 @@
+.userWrapper {
+  margin-bottom: 30px !important;
+}
+
+.users {
+  font-size: 14px;
+}
+
+.form-toggle {
+  display: none;
+}
+.form-toggle:checked ~ .form-hidden {
+  margin: 15px 0;
+  height: 105px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.user-form {
+  margin: 0 auto;
+  box-shadow: 0 1px 69.16px 6.84px rgba(20, 64, 51, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.user-form ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+.user-form .forget-password form {
+  width: 200%;
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+  margin: 0;
+  transition: height 0.2s ease-in, opacity 0.2s, visibility 0.2s;
+}
+.user-form .login-option {
+  text-align: center;
+  width: 100%;
+}
+.user-form .login-option label {
+  color: #333;
+  line-height: 24px;
+  text-decoration: none;
+  text-align: left;
+  width: 100%;
+}
+.user-form .login-option label:hover {
+  cursor: pointer;
+  color: #630;
+}
+.user-form .login-option_top {
+  display: flex;
+}
+.user-form .login-option_bottom {
+  margin-bottom: 45px;
+}
+.user-form .social-network-login p {
+  color: #212529;
+}
+.user-form .htmlBtn:hover {
+  background: #fe9614;
+}
+.user-form .register-form input {
+  margin-bottom: 0;
+  margin-top: 0.5rem;
+}
+.user-form_title {
+  text-align: center;
+  font-size: 26px;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0;
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  color: #F93;
+  width: fit-content;
+}
+.user-form_title:before {
+  content: "";
+  background: #f93;
+  width: 50px;
+  height: 5px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  z-index: 1;
+  border-radius: 3px;
+}
+.user-form_title:after {
+  content: "";
+  width: 100%;
+  height: 5px;
+  background: #e5e9ed;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  border-radius: 3px;
+}
+.user-form .login-form, .user-form .forget-password, .user-form .register-form {
+  width: 100%;
+}
+.user-form .login-form input, .user-form .forget-password input, .user-form .register-form input {
+  height: 45px;
+  padding: 0 20px;
+  color: #333;
+  line-height: 45px;
+  border: 1px solid #e1e1e1;
+  box-shadow: none;
+  background: #fff;
+  margin-bottom: 15px;
+  width: 100%;
+  outline: none;
+}
+.user-form .login-form button, .user-form .forget-password button, .user-form .register-form button {
+  width: 100%;
+  color: #fff;
+  background: #F93;
+  border: solid 1px #F93;
+  font-size: 16px;
+  height: 45px;
+}
+.user-form .login-form button:hover, .user-form .forget-password button:hover, .user-form .register-form button:hover {
+  background: #fff;
+  color: #F93;
+}
+.user-form .login-form .htmlBtn, .user-form .forget-password .htmlBtn, .user-form .register-form .htmlBtn {
+  color: #fff;
+  background: #F93;
+  border: solid 1px #F93;
+  text-transform: uppercase;
+}
+.user-form .login-form .htmlBtn:hover, .user-form .forget-password .htmlBtn:hover, .user-form .register-form .htmlBtn:hover {
+  background: #fff;
+  color: #F93;
+}
+
+.signup-link {
+  height: fit-content;
+  width: 100%;
+  text-align: right;
+}
+
+.social-link {
+  padding: 10px 0 20px 0;
+}
+
+.login-link {
+  text-align: center;
+  width: 100%;
+}
+.login-link a {
+  color: #f93;
+}
+.login-link a:hover {
+  color: #333;
+}
+
+.account-option h5 {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 19px;
+  color: #212B25;
+  margin-bottom: 15px;
+}
+.account-option .order-list thead th {
+  background: #F93;
+  color: #fff;
+}
+.account-option .error {
+  color: red;
+}
+
+.user-profile {
+  font-size: 14px;
+}
+.user-profile .account-option_list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.account-option_list a {
+  color: #212B25;
+}
+.account-option_list a.active {
+  color: #F93;
+}
+.account-option_list p {
+  display: inline-block;
+}
+.account-option_list li {
+  margin-bottom: 15px;
+}
+
+#UserChangePassword ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+#UserChangePassword ul li {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+#UserChangePassword ul li label {
+  margin-bottom: 0.5rem;
+}
+#UserChangePassword ul li input {
+  height: 45px;
+  padding: 0 20px;
+  color: #333;
+  line-height: 45px;
+  border: 1px solid #e1e1e1;
+  box-shadow: none;
+  width: 100%;
+  outline: none;
+}
+#UserChangePassword ul li .htmlBtn {
+  margin-top: 15px;
+  background: #f93;
+  color: #fff;
+  border: 1px solid #f93;
+}
+#UserChangePassword ul li .htmlBtn:hover {
+  background: #fff;
+  color: #f93;
+}
+
+.edit-profile_form .btn-update {
+  color: #fff;
+  background: #f93;
+  border: 1px solid #f93;
+  font-weight: bold;
+  padding: 10px 20px;
+}
+.edit-profile_form .btn-update:hover {
+  background: #fff;
+  color: #f93;
+}
+
+.social-login {
+  padding: 0.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 12px;
+  width: fit-content;
+  min-width: 130px;
+  display: flex;
+  gap: 0.75rem;
+  position: relative;
+  margin: 0 auto;
+  align-items: center;
+}
+.social-login::after {
+  position: absolute;
+  content: "";
+  width: 1px;
+  height: 100%;
+  background: #0a0101;
+  top: 0;
+  opacity: 0.2;
+  left: 25%;
+}
+.social-login i {
+  width: 15px;
+}
+
+.fb-login {
+  background: #3b5999;
+  margin-right: 4px;
+}
+
+.gp-login {
+  background: #e14a34;
+  margin-left: 4px;
+}
+
+.form-control {
+  border-radius: 0;
+}
+.form-control:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.errors li {
+  color: red;
+  font-size: 0.8rem;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.message-success {
+  padding-top: 15px;
+}
+.message-success h3 {
+  font-size: 1.5rem;
+}
+.message-success i {
+  margin-bottom: 1.5rem;
+}
+.message-success p {
+  margin: 0;
+}
+.message-success a {
+  text-decoration: none;
+  color: #0d6efd !important;
+  background: transparent !important;
+}
+.message-success a:hover {
+  color: blue;
+}
+.message-success a:after {
+  content: "\f061";
+  font-family: "Font Awesome 5 Pro";
+  margin-left: 5px;
+}
+
+/*# sourceMappingURL=user.css.map */

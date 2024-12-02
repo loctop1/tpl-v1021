@@ -1,0 +1,109 @@
+{% set nav = "" %}
+
+{% set menuCustom = getMenus({'type':'header'}) %}
+    {% if(menuCustom is not empty) %}
+        {% for m in menuCustom %}
+            {% set arrTypeCate = m.typeCates %}
+            {% set category = getCategoryTypeMenu(m.type) %}
+            {#                                      In ra menu tự tạo (nếu có) #}
+            {% if m.type in arrTypeCate %}
+                {% if(category is not empty) %}
+                    {% for c in category %}
+                        {% set nav = nav ~ '<li class="menu-item">' %}
+                        {% set nav = nav ~ '<a href="'~ c.viewLink ~'" title="' ~ c.name ~ '"
+                               class="s-popularLink">' %}
+                        {% set nav = nav ~ c.name %}
+                        {% set nav = nav ~ '</a>' %}
+                        {% set nav = nav ~ '</li>' %}
+                    {% endfor %}
+                {% endif %}
+                {#                                          In ra menu măc định        #}
+            {% else %}
+                {% set nav = nav ~ '<li class="menu-item">' %}
+                {% set nav = nav ~ '<a class="s-popularLink" href="' ~ m.viewLink ~ '">' ~ m.name ~ '</a>' %}
+                {% if(m.childs is not empty) %}
+                    {% set nav = nav ~ '<i class="fa-solid fa-chevron-down j-dropdown"></i>' %}
+                    {% set nav = nav ~ '<ul class="submenu j-submenu">' %}
+                    {% for m1 in m.childs %}
+                        {% set category2 = getCategoryTypeMenu(m1.type) %}
+                        {% set nav = nav ~ '<li class="submenu-item d-flex ">' %}
+                        {% set nav = nav ~ '<a href="' ~ m1.viewLink ~ '" class="s-popularLink">' ~ m1.name ~ '</a>' %}
+                        {% if category2 is not empty %}
+                            {% set nav = nav ~ '<i class="fa-solid fa-chevron-right j-dropdown"></i>' %}
+                            {% set nav = nav ~ '<ul class="submenu">' %}
+                            {% for c in category2 %}
+                                {% set nav = nav ~ '<li class="submenu-item d-flex">' %}
+                                {% set nav = nav ~ '<a href="'~ c.viewLink ~'" title="' ~ c.name ~ '"class="s-popularLink">'~c.name~'</a>' %}
+                                {#                                Danh mục cấp 2#}
+                                {% if(c.childs is not empty) %}
+                                    {% set nav = nav ~ '<i class="fa-solid fa-chevron-right j-dropdown"></i>' %}
+                                    {% set nav = nav ~ '<ul class="submenu">' %}
+                                    {% for c1 in c.childs %}
+                                        {% set nav = nav ~ '<li class="submenu-item d-flex">' %}
+                                        {% set nav = nav ~ '<a href="' ~ c1.viewLink ~ '" class="s-popularLink">' ~ c1["name"] ~ '</a>' %}
+                                        {#                                        Danh mục cấp 3#}
+                                        {% if(c1.childs is not empty) %}
+                                            {% set nav = nav ~ '<i class="fa-solid fa-chevron-right j-dropdown"></i>' %}
+                                            {% set nav = nav ~ '<ul class="submenu">' %}
+                                            {% for c2 in c1.childs %}
+                                                {% set nav = nav ~ '<li class="submenu-item d-flex">' %}
+                                                {% set nav = nav ~ '<a href="' ~ c2.viewLink ~ '" class="s-popularLink">' ~ c2["name"] ~ '</a>' %}
+                                                {#                                              Danh mục cấp 4#}
+                                                {% if(c2.childs is not empty) %}
+                                                    {% set nav = nav ~ '<i class="fa-solid fa-chevron-right j-dropdown"></i>' %}
+                                                    {% set nav = nav ~ '<ul class="submenu">' %}
+                                                    {% for c3 in c2.childs %}
+                                                        {% set nav = nav ~ '<li class="submenu-item d-flex">' %}
+                                                        {% set nav = nav ~ '<a href="' ~ c3.viewLink ~ '" class="s-popularLink">' ~ c3["name"] ~ '</a>' %}
+                                                        {% set nav = nav ~ '</li>' %}
+                                                    {% endfor %}
+                                                    {% set nav = nav ~ '</ul>' %}
+                                                {% endif %}
+                                                {#                                              End danh mục cấp 4#}
+                                                {% set nav = nav ~ '</li>' %}
+                                            {% endfor %}
+                                            {% set nav = nav ~ '</ul>' %}
+                                        {% endif %}
+                                        {#                                        End danh mục cấp 3#}
+                                        {% set nav = nav ~ '</li>' %}
+                                    {% endfor %}
+                                    {% set nav = nav ~ '</ul>' %}
+                                {% endif %}
+                                {#                                End danh mục cấp 2#}
+                                {% set nav = nav ~ '</li>' %}
+                            {% endfor %}
+                            {%  set nav = nav ~ '</ul>' %}
+                        {% elseif(m1.childs is not empty) %}
+                            {#                                        {% import _self as macro %} #}
+                            {#                                        {% set nav = nav ~ macro.sub_menu(m.childs) %} #}
+                            {% set nav = nav ~ '<i class="fa-solid fa-chevron-right j-dropdown"></i>' %}
+                            {% set nav = nav ~ '<ul class="submenu">' %}
+                            {% for m2 in m1.childs %}
+                                {% set nav = nav ~ '<li class="submenu-item d-flex">' %}
+                                {% set nav = nav ~ '<a href="' ~ m2.viewLink ~ '" class="s-popularLink">' ~ m2["name"] ~ '</a>' %}
+                                {% if(m2.childs is not empty) %}
+                                    {% set nav = nav ~ '<i class="fa-solid fa-chevron-right j-dropdown"></i>' %}
+                                    {% set nav = nav ~ '<ul class="submenu">' %}
+                                    {% for m3 in m2.childs %}
+                                        {% set nav = nav ~ '<li class="submenu-item d-flex">' %}
+                                        {% set nav = nav ~ '<a href="' ~ m3.viewLink ~ '" class="s-popularLink">' ~ m3["name"] ~ '</a>' %}
+                                        {#                                                                {% if(m2.childs is not empty) %} #}
+                                        {#    #}{#                                                              Menu Cap 5 #}
+                                        {#                                                                {% endif %} #}
+                                        {% set nav = nav ~ '</li>' %}
+                                    {% endfor %}
+                                    {% set nav = nav ~ '</ul>' %}
+                                {% endif %}
+                                {% set nav = nav ~ '</li>' %}
+                            {% endfor %}
+                            {% set nav = nav ~ '</ul>' %}
+                        {% endif %}
+                        {% set nav = nav ~ '</li>' %}
+                    {% endfor %}
+                    {% set nav = nav ~ '</ul>' %}
+                {% endif %}
+                {% set nav = nav ~ '</li>' %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{{ nav | raw }}

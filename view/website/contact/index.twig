@@ -1,0 +1,57 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle('Trang liên hệ').setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="keywords" content="{{ getKeyContentValue('META_KEYWORDSs') }}">
+    <meta name="description" content="{{ getKeyContentValue('META_DESCRIPTION') }}">
+    <meta property="og:title" content="{{ getKeyContentValue('META_TITLE') }}">
+    <meta property="og:url" content="{{ getCurrentUrl() }}">
+    <meta property="og:image" content="{{ getBusinessLogo() }}">
+    <link rel="canonical" href="{{  getCurrentUrl() }}">
+{% endblock %}
+{% block body %}
+    <div class="wrapper contactWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ translate('Liên hệ') }}</p>
+                {% set buildBread  = [{'label': translate('Liên hệ'), 'uri':'/lien-he'}] %}
+                {{ render_breadcrumb(buildBread ) }}
+            </section>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="contact-info">
+                        <p class="contact-info_title">{{ getKeyContentValue("COMPANY_NAME") }}</p>
+                        <p>{{ getKeyContentValue("SLOGAN") }}</p>
+                        <p>
+                            <span class="fw-bold">{{ translate('Địa chỉ: ') }}</span>
+                            {{ getKeyContentValue("ADDRESS") }}
+                        </p>
+                        <p>
+                            <span class="fw-bold">{{ translate('Hotline: ') }}</span>
+                            <a href="tel:{{ getKeyContentValue("HOTLINE") }}" class="fw-bold fContentLeft-link">{{ getKeyContentValue("HOTLINE") }}</a>
+                        </p>
+                        <p>
+                            <span class="fw-bold">{{ translate('Email: ') }}</span>
+                            <a href="mailto:{{ getKeyContentValue("EMAIL") }}" class="fw-bold fContentLeft-link">{{ getKeyContentValue("EMAIL") }}</a>
+                        </p>
+                    </div>
+                    <div class="contact-form mb-3">
+                        <p class="contact-form_title">{{ translate('Liên hệ với chúng tôi') }}</p>
+                        <span>{{ message ? message : '' }}</span>
+                        {{ partial('partial/form',{'form':form}) }}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.592763559455!2d105.81760517508033!3d21.008955280635416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac828a8d097f%3A0x7149275aa4ecd1df!2zTmhhbmgudm4gLSBQaOG6p24gbeG7gW0gcXXhuqNuIGzDvSBiw6FuIGjDoG5n!5e0!3m2!1svi!2s!4v1724402474139!5m2!1svi!2s" width="100%" height="100%" style="min-height:450px" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

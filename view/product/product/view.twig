@@ -1,0 +1,436 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle(product.name).setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="description" content="{{ product.metaDescription ?:product.name  }}">
+    <meta name="keywords" content="{{ product.metaKeywords?:product.name }}">
+    <meta property="og:url" content="{{ product.canonicalLink }}">
+    <meta property="og:title" content="{{ product.metaTitle?:product.name }}">
+    <meta property="og:description" content="{{  product.metaDescription ?:product.name }}">
+    <meta property="og:image" content="{{ product.imageUri }}">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="{{ product.canonicalLink }}">
+{% endblock %}
+{% block body %}
+    {% set ivt = 0 %}
+    {% if product.inventory().calcAvailable() > 0 %}
+        {% set ivt = product.inventory().calcAvailable() %}
+    {% elseif product.available > 0 %}
+        {% set ivt = product.available %}
+    {% endif %}
+    {% set variableAttributes = product.variableAttributes %}
+    {% set flag = 0 %}
+<div class="wrapper productDetail-box">
+    <div class="container">
+        {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+        {% if(banner_breadcrumb is not empty) %}
+            {% set banner = banner_breadcrumb | first %}
+            {% set banner_link = banner.imageSrc %}
+        {% else %}
+            {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+        {% endif %}
+        <section class="bread-crumb"
+         style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+            <p class=" breadcrumb breadcrumb-title">{{ product.name }}</p>
+            {% set buildBread = buildBreadcrumbs(category) %}
+            {% set buildBread = buildBread | merge ([{'label': product.name,'uri': product.viewLink, 'class' : product.id}]) %}
+            {{ render_breadcrumb(buildBread) }}
+        </section>
+        <section class="row productDetail">
+            <div class="col-lg-9 col-12 row productDetail-main">
+                <div class="col-xl-5 col-lg-5 col-md-5">
+                    <div class="product-detail_image">
+                        <div class="product-preview _slideMain">
+                            {% if (product.images) %}
+                                {% for i in product.images %}
+                                    <div>
+                                        <img data-fancybox="gallery"
+                                             class="img-fluid img-ez-zoom"
+                                             src="{{ i.thumbnailUri }}"
+                                             alt="{{ product.name }}">
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div>
+                                    <img data-fancybox="gallery"
+                                         class="img-fluid img-ez-zoom"
+                                         src="{{ product.imageUri }}"
+                                         alt="{{ product.name }}">
+                                </div>
+                            {% endif %}
+
+                        </div>
+                        <div class="product-preview_thumbs _slideThumb">
+                            {% if (product.images) %}
+                                {% for i in product.images %}
+                                    <div> <img class="img-fluid img-ez-zoom" src="{{ i.thumbnailUri }}" alt="{{ product.name }}"></div>
+                                {% endfor %}
+                            {% else %}
+                                <div><img class="img-fluid img-ez-zoom" src="{{ product.imageUri }}" alt="{{ product.name }}"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-7 col-lg-7 col-md-7 productInfo">
+                    <p class="productInfo-title">{{ product.name }}</p>
+                    <p class="productInfo-brand">{{ translate('Thương hiệu:')}}
+                        <span class="productInfo-brand_name">{{ product.brandName ? product.brandName : "Đang cập nhật" }}</span>
+                    </p>
+                    {% if( product.contactPrice or (product.price==0)) %}
+                        <p class="productInfo-price _pDetailProduct">
+                            {{ translate('Liên hệ') }}
+                        </p>
+                    {% elseif(product.priceAfterDiscount > 0) %}
+                        {% set discountPercent = (product.priceAfterDiscount/product.price -1) * 100 %}
+                        <p class="productInfo-price _pSaleDetailProduct">
+                            {{ product.priceAfterDiscount|number_format(0) }}<sup>₫</sup>
+
+                        <span class="productInfo-price_oldPrice">
+                            {{ product.price|number_format(0) }}<sup>₫</sup>
+                        </span>
+                        <span class="productInfo-price_discount">{{ discountPercent|round }}%</span>
+                        </p>
+                    {% elseif(product.oldPrice > 0) %}
+                        {% set discountPercent = (product.price/product.oldPrice -1) * 100 %}
+                        <p class="productInfo-price">
+                            {{ product.price|number_format(0) }}<sup>₫</sup>
+
+                        <span class="productInfo-price_oldPrice">
+                            {{ product.oldPrice|number_format(0) }}<sup>₫</sup>
+                        </span>
+                        <span class="productInfo-price_discount">{{ discountPercent|round }}%</span>
+                        </p>
+                    {% else %}
+                        <p class="productInfo-price">
+                            {{ product.price|number_format(0) }}<sup>₫</sup>
+                        </p>
+                    {% endif %}
+                    <hr>
+                    <p class="productInfo-description_title">{{ translate('Mô tả') }}</p>
+                    <div class="productInfo-description">{{ product.description ? product.description | raw : "Mô tả đang cập nhật"}}</div>
+                    <hr>
+                    {% set color = variableAttributes['color'] %}
+                    {% if color is not null or color is not empty %}
+                        <div class="productInfo-color">
+                            {% set valuesColor = color.childValues %}
+                            {% set numbC =  (valuesColor | length) %}
+                            {% if(valuesColor is not null and numbC>0) %}
+                                {% set flag = flag + 1 %}
+                                <p class="productInfo-color_title">{{ translate('Màu sắc:') }}</p>
+                                <div class="productInfo-color_panel req _colorSelect" data-column="{{ color.column }}">
+                                    {% for attrValue in valuesColor %}
+                                        {% set arrColor = [] %}
+                                        {% set arrColor = arrColor|merge({ (color.column): attrValue.id }) %}
+                                        {% set img = getAttrValueImage(arrColor,false, {'return':'image','product':product}) %}
+                                        {% set pIdsAttrStr = getAttrValueImage(arrColor,true,{'product':product}) | json_encode() %}
+                                        {% set pIdsAttrStr = pIdsAttrStr | replace({'[': '', ']': ''}) %}
+                                        <a class="_pSelect productInfo-color_item {{ (numbC == 1) ?'active':'' }}"
+                                           data-psId="{{ pIdsAttrStr }}"
+                                           data-id="{{ attrValue.id }}"
+                                           data-src="{{ img }}"
+                                           style="background:{{ '#'~attrValue.content }};--border:{{ '#'~attrValue.content }}">
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% set size = variableAttributes['size'] %}
+                    {% if size is not empty %}
+                        <div class="productInfo-size">
+                            {% set valuesSize = size.childValues %}
+                            {% set numbS = (valuesSize | length) %}
+                            {% if(valuesSize is not null and numbS>0) %}
+                                {% set flag = flag + 1 %}
+                                <p class="productInfo-size_title">{{ translate('Kích thước:') }}</p>
+                                <div class="productInfo-size_panel req _sizeSelect"
+                                     data-column="{{ size.column }}">
+                                    {% for attrValueC in valuesSize %}
+                                        <a data-id="{{ attrValueC.id }}"
+                                           class="productInfo-size_item {{ ((numbS == 1) ? 'active' : '') }}">
+                                            {{ attrValueC.name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    <hr>
+                    {% endif %}
+                    <div class="productInfo-action">
+                        <div class="d-flex align-items-center _quantityCart">
+                            <button class="productInfo-action_quantityDecrease subtract">
+                                <i class="fa-light fa-minus"></i>
+                            </button>
+                            <input type="number" class="productInfo-action_quantity _quantity" value="1" psId="{{ product.id }}">
+                            <button class="productInfo-action_quantityIncrease plus">
+                                <i class="fa-light fa-plus"></i>
+                            </button>
+                            {% if(ivt > 0) %}
+                                <p style="margin-left: 8px;font-size: 14px">{{ translate('Còn hàng') }}</p>
+                            {% else %}
+                                <p style="margin-left: 8px;font-size: 14px">{{ translate('Hết hàng') }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex mt-3 productInfo-action_groupBtn">
+                            {% if (flag > 0) %}
+                                <a class="_addToCart productInfo-action_addCart" title="{{ translate('Vui lòng chọn màu sắc hoặc kích cỡ') }}!" data-ck="0" data-psid="{{ product.id }}" data-selId="{{ product.id }}" >
+                                    <i class="far fa-shopping-cart"></i>
+                                    {{ translate('Thêm vào giỏ hàng') }}
+                                </a>
+                                <a class="_buyNow productInfo-action_buy" title="{{ translate('Vui lòng chọn màu sắc hoặc kích cỡ') }}!" data-ck="0" data-psid="{{ product.id }}" data-selId="{{ product.id }}" >
+                                    {{ translate('Mua ngay') }}
+                                </a>
+                            {% else %}
+                                <a class="_addToCart productInfo-action_addCart" data-id="{{ product.id }}" data-ck="1" data-psid="{{ product.id }}" data-selId="{{ product.id }}" >
+                                    <i class="far fa-shopping-cart"></i>
+                                    {{ translate('Thêm vào giỏ hàng') }}
+                                </a>
+                                <a class="_buyNow productInfo-action_buy" data-ck="1" data-psid="{{ product.id }}" data-selId="{{ product.id }}" >
+                                    {{ translate('Mua ngay') }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% set coupons = getListCoupon({'couponLimit':1}) %}
+                {% if coupons is not empty %}
+                <div class="col-xl-12 coupons-box">
+                    <p class="coupons-title">{{ translate('Mua nhiều giảm giá') }}</p>
+                    <div class="coupons">
+                    {% for coupon in coupons %}
+                        <div class="coupon d-flex align-items-center">
+                            <div class="coupon-item_wrapper">
+                                <div class="coupon-item">{{ coupon.value/1000 }}K</div>
+                            </div>
+                            {% if(coupon.couponCode) is not empty %}
+                            {% set c = coupon.couponCode | first %}
+                            <div class="coupon-content">
+                                <p class="coupon-content_title">{{ translate("Nhập mã:") }} {{ c.code }}</p>
+                                <p class="coupon-content_detail" title="{{ coupon.description }}">{{ coupon.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="coupon-content_copyBtn" data-coupon="{{ c.code }}">{{ translate('Sao chép mã') }}</p>
+                                    <a class="coupon-content_conditional"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#couponDetailModal"
+                                       data-value="{{ coupon.value }}"
+                                       data-description="{{ coupon.description }}"
+                                       data-code="{{ c.code }}"
+                                       data-start="{{ c.startDate | date('d/m/Y') }}"
+                                       data-end="{{ c.endDate | date('d/m/Y') }}"
+                                       href="">{{ translate("Điều kiện") }}</a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="nav nav-tabs productInfo-extra" role="tablist">
+                    <div class="nav-item" role="presentation">
+                        <a class="nav-link productInfo-extra_title border-0 h-100 active" id="simple-tab-0" data-bs-toggle="tab" href="#simple-tabpanel-0" role="tab" aria-controls="simple-tabpanel-0" aria-selected="true">
+                            {{ translate('Mô tả sản phẩm') }}
+                        </a>
+                    </div>
+                    <div class="nav-item" role="presentation">
+                        <a class="nav-link productInfo-extra_title border-0 h-100" id="simple-tab-1" data-bs-toggle="tab" href="#simple-tabpanel-1" role="tab" aria-controls="simple-tabpanel-1" aria-selected="false">
+                            {{ translate('Chính sách đổi trả') }}
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-content">
+                    <div class="tab-pane active" id="simple-tabpanel-0" role="tabpanel" aria-labelledby="simple-tab-0">
+                        {{ product.content ? product.content| raw : "Thông tin sản phẩm đang được cập nhật" }}
+                    </div>
+                    <div class="tab-pane" id="simple-tabpanel-1" role="tabpanel" aria-labelledby="simple-tab-1">
+                        {{ getKeyContentValue('POLICY') }}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-12 productDetail-sidebar">
+                <div class="sticky-top">
+                {% set maybeYouLike = searchProducts({'limit':4,'categoryId':product.categoryId }) %}
+                {% if maybeYouLike is not empty %}
+                    <div class="productDetail-sidebar_suggest">
+                    <a href="" class="suggestProduct-title">{{ translate('Có thể bạn thích') }}</a>
+                    {% for p in maybeYouLike %}
+                        <div class="suggestProduct">
+                            <div class="suggestProduct-thumb">
+                                <img src="{{ p.thumbnailUri }}" alt="{{ p.name }}">
+                            </div>
+                            <div class="suggestProduct-content">
+                                <a href="{{ p.viewLink }}" class="suggestProduct-content_title">{{ p.name }}</a>
+                                {% if( product.contactPrice or (product.price==0)) %}
+                                    <p class="suggestProduct-content_price">{{ translate('Liên hệ') }}</p>
+                                {% elseif(product.priceAfterDiscount > 0) %}
+                                    <p class="suggestProduct-content_price _pSaleDetailProduct">
+                                        {{ product.priceAfterDiscount|number_format(0) }}<sup>₫</sup>
+                                        <span class="suggestProduct-content_oldPrice">{{ product.price|number_format(0) }}<sup>₫</sup></span>
+                                    </p>
+                                {% elseif(product.oldPrice > 0) %}
+                                    <p class="suggestProduct-content_price">
+                                        {{ product.price|number_format(0) }}<sup>₫</sup>
+                                        <span class="suggestProduct-content_oldPrice">{{ product.oldPrice|number_format(0) }}<sup>₫</sup></span>
+                                    </p>
+                                {% else %}
+                                    <p class="suggestProduct-content_price">{{ product.price|number_format(0) }}<sup>₫</sup></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                {% set bannerDetailProduct = getCurrentBannerByCode('BANNER_PRODUCT_DETAIL',{'limit':1}) %}
+                    <div class="productDetail-sidebar_banner">
+                    {% if bannerDetailProduct is not empty %}
+                        {% set bn = bannerDetailProduct | first %}
+                        <a href="{{ bn.viewLink }}">
+                            <img class="lazyload rounded-1"
+                                 style="margin-top: 15px"
+                                 data-src="{{ bn.imageSrc }}"
+                                 src="{{ linkSystemImage('/images/grey.gif') }}"
+                                 alt="{{ bn.name }}">
+                        </a>
+                    {% else %}
+                        <a href="/">
+                            <img class="rounded-1"
+                                 style="margin-top: 15px"
+                                 src="https://dummyimage.com/375x525/163645/fff"
+                                 alt="san-pham">
+                        </a>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% set productRelated = searchProducts({ 'limit':5, 'categoryId':product.categoryId }) %}
+        {% if(productRelated is not empty) %}
+        <section class="row productRelated">
+            <p class="productRelated-title col-12 text-uppercase">
+                {{ translate('Sản phẩm liên quan') }}
+            </p>
+            <div class="productRelated-list">
+                {% for p in productRelated %}
+                    <div class="card product _productItem" data-id="{{ p.id }}" data-type="{{ p.typeId }}">
+                    <div class="card-img-top product-preview">
+                        {% if(p.calcDiscountPercent > 0) %}
+                            <span class="product-label_discount">- {{ p.calcDiscountPercent }}%</span>
+                        {% endif %}
+                        <div class="product-label_hidden">
+                            <span class="product-label_view _quickView" data-id="{{ p.id }}">{{ translate('Xem nhanh') }}</span>
+                            {% if( (p.contactPrice is not null) or (p.price!=0)) %}
+                                <span class="product-label_buy">
+                                    {% set dataCk = 1 %}
+                                    {% set dataHref = 'javascript:void(0)' %}
+                                    {% set dataTitle = 'Mua ngay' %}
+                                    {% if(p.isParent) %}
+                                        {% set dataCk = 0 %}
+                                        {% set dataHref = p.viewLink %}
+                                        {% set dataTitle = 'Tùy chọn' %}
+                                    {% endif %}
+                                    <a href="{{ dataHref }}" class="_addCartWidget text-light text-decoration-none" data-id="{{ p.id }}" data-ck="{{ dataCk }}">{{ dataTitle }}</a>
+                                </span>
+                            {% endif %}
+                        </div>
+                        <span class="product-label_like _addWishList" data-id="{{ p.id }}">
+                            <i class="fa-solid fa-heart"></i>
+                        </span>
+                        <a href="{{ p.viewLink }}" class="text-decoration-none text-light">
+                            <div class="product-thumb">
+                                <img src="{{ linkSystemImage('/images/grey.gif') }}" data-src="{{ p.imageUri }}" alt="{{ p.name }}" class="lazyload">
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="card-body product-info">
+                        <h5 class="card-title product-name"><a href="{{ p.viewLink }}" style="--line:2" class="s-popularLink s-textLimit text-capitalize">{{ p.name|raw }}</a></h5>
+                        {% if(p.contactPrice or (p.price == 0)) %}
+                            <p class="product-price">{{ translate('Liên hệ') }}</p>
+                        {% elseif(priceDiscount > 0 ) %}
+                            <p class="product-price">
+                                {{ priceDiscount|number_format(0) }}<sup>₫</sup>
+                                <span class="product-oldPrice">{{ p.price|number_format(0) }}<sup>₫</sup></span>
+                            </p>
+                        {% else %}
+                            {% if (p.oldPrice > 0) %}
+                                <p class="product-price">
+                                    {{ p.price|number_format(0) }}<sup>₫</sup>
+                                    <span class="product-oldPrice">{{ p.oldPrice|number_format(0) }}<sup>₫</sup></span>
+                                </p>
+                            {% else %}
+                                <p class="product-price">{{ p.price|number_format(0) }}<sup>₫</sup></p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        {% set history = getHistory({'limit': 5}) %}
+        {% if(history is not empty) %}
+            <section class="row productViewed">
+                <p class="productViewed-title col-12 text-uppercase">
+                    {{ translate('Sản phẩm đã xem') }}
+                </p>
+                <div class="productViewed-list">
+                    {% for p in productRelated %}
+                        <div class="card product _productItem" data-id="{{ p.id }}" data-type="{{ p.typeId }}">
+                        <div class="card-img-top product-preview">
+                            {% if(p.calcDiscountPercent > 0) %}
+                                <span class="product-label_discount">- {{ p.calcDiscountPercent }}%</span>
+                            {% endif %}
+                            <div class="product-label_hidden">
+                                <span class="product-label_view _quickView" data-id="{{ p.id }}">{{ translate('Xem nhanh') }}</span>
+                                {% if( (p.contactPrice is not null) or (p.price!=0)) %}
+                                    <span class="product-label_buy">
+                                    {% set dataCk = 1 %}
+                                        {% set dataHref = 'javascript:void(0)' %}
+                                        {% set dataTitle = 'Mua ngay' %}
+                                        {% if(p.isParent) %}
+                                            {% set dataCk = 0 %}
+                                            {% set dataHref = p.viewLink %}
+                                            {% set dataTitle = 'Tùy chọn' %}
+                                        {% endif %}
+                                    <a href="{{ dataHref }}" class="_addCartWidget text-light text-decoration-none" data-id="{{ p.id }}" data-ck="{{ dataCk }}">{{ dataTitle }}</a>
+                                </span>
+                                {% endif %}
+                            </div>
+                            <span class="product-label_like _addWishList" data-id="{{ p.id }}">
+                            <i class="fa-solid fa-heart"></i>
+                        </span>
+                            <a href="{{ p.viewLink }}" class="text-decoration-none text-light">
+                                <div class="product-thumb">
+                                    <img src="{{ linkSystemImage('/images/grey.gif') }}" data-src="{{ p.imageUri }}" alt="{{ p.name }}" class="lazyload">
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="card-body product-info">
+                            <h5 class="card-title product-name"><a href="{{ p.viewLink }}" style="--line:2" class="s-popularLink s-textLimit text-capitalize">{{ p.name|raw }}</a></h5>
+                            {% if(p.contactPrice or (p.price == 0)) %}
+                                <p class="product-price">{{ translate('Liên hệ') }}</p>
+                            {% elseif(priceDiscount > 0 ) %}
+                                <p class="product-price">
+                                    {{ priceDiscount|number_format(0) }}<sup>₫</sup>
+                                    <span class="product-oldPrice">{{ p.price|number_format(0) }}<sup>₫</sup></span>
+                                </p>
+                            {% else %}
+                                {% if (p.oldPrice > 0) %}
+                                    <p class="product-price">
+                                        {{ p.price|number_format(0) }}<sup>₫</sup>
+                                        <span class="product-oldPrice">{{ p.oldPrice|number_format(0) }}<sup>₫</sup></span>
+                                    </p>
+                                {% else %}
+                                    <p class="product-price">{{ p.price|number_format(0) }}<sup>₫</sup></p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

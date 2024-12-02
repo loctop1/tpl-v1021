@@ -1,0 +1,83 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle(news.title | e('html')).setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="keywords" content="{{ news.metaKeywords ?: news.title | e('html') }}">
+    <meta name="description" content="{{ (news.metaDescription ?: news.title | e('html')) }}">
+    <meta property="og:title" content="{{ news.metaTitle ?: news.title | e('html') }}">
+    <meta property="og:url" content="{{ news.canonicalLink }}">
+    <meta property="og:image" content="{{ news.pictureUri }}">
+    <meta property="og:type" content="category">
+    <link rel="canonical" href="{{ news.canonicalLink }}">
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper newsWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ news.title }}</p>
+                {% set buildBread = buildBreadcrumbs(newsCategory) %}
+                {% set buildBread = buildBread | merge ([{'label': news.title,'uri': news.viewLink, 'class' : news.id}]) %}
+                {{ render_breadcrumb(buildBread ) }}
+            </section>
+            <section class="news">
+                <div class="row">
+                    <div class="col-lg-9 col-12 news-item">
+                        <p class="news-title">{{ news.title | e('html') }}</p>
+                        <span class="news-item_dateCreated"><i class="fa-light fa-clock"></i> {{ n.createdDateTime|date('d/m/Y') }}</span>
+                        <div class="news-content">
+                            {{ news.content | raw }}
+                            {{ render_embedComment({
+                                'type': 2,
+                                'itemId': news.id,
+                                'title': news.title,
+                            }) }}
+                        </div>
+                    </div>
+
+                    {% set lastestNews= getHotNews({'limit':4}) %}
+                    {% if(lastestNews is not empty) %}
+                        <div class="col-lg-3 col-12">
+                            <div class="news-hot">
+                                <p class="news-title2">{{ translate('Tin tức nổi bật') }}</p>
+                                <div class="posts">
+                                        {% for i in lastestNews %}
+                                            <div class="post">
+                                                <div class="post-thumb">
+                                                    <a href="{{ i.viewLink }}" title="{{ i.title }}" class="s-popularLink">
+                                                        <img src="{{ linkSystemImage('/images/grey.gif') }}" class="lazyload" data-src="{{ i.imageUri }}" alt="{{ i.title|raw }}" >
+                                                    </a>
+                                                </div>
+                                                <div class="post-content">
+                                                    <a href="{{ i.viewLink }}" title="{{ i.title }}" class="post-title s-popularLink s-textLimit" style="--line:2">{{ i.title }}</a>
+                                                    <p class="post-date">{{ i.createdDateTime | date('d/m/Y') }}</p>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% set tags = getTags({'itemId':news.id,'type':'article'}) %}
+                                {% if tags is not empty %}
+                                    <p class="news-title2">{{ translate('Tags') }}</p>
+                                    <ul class="news-tags">
+                                        {% for t in tags %}
+                                            <li class="news-tag">
+                                                <a href="{{ t.viewLink }}" class="text-decoration-none">{{ t.name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

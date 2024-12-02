@@ -1,0 +1,85 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle(newsCategory.name).setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="keywords" content="{{ newsCategory.metaKeywords ?: newsCategory.name }}">
+    <meta name="description" content="{{ newsCategory.metaDescription ?: newsCategory.Name }}">
+    <meta property="og:title" content="{{ newsCategory.metaTitle ?: newsCategory.name }}">
+    <meta property="og:url" content="{{ newsCategory.canonicalLink }}">
+    <meta property="og:image" content="{{ newsCategory.imgUri }}">
+    <meta property="og:type" content="category">
+    <link rel="canonical" href="{{ newsCategory.canonicalLink }}">
+{% endblock %}
+{% block body %}
+    <div class="wrapper newsWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ newsCategory.name }}</p>
+                {% set buildBread  = buildBreadcrumbs(newsCategory) %}
+                {{ render_breadcrumb(buildBread) }}
+            </section>
+            <section class="row news">
+                {% if(paginator.currentModels is not empty) %}
+                    {% set t = 1 %}
+                    <div class="col-lg-9 col-12 news-list">
+                        <p class="news-title">{{ translate('Tin tức') }}</p>
+                        {% for n in paginator.currentModels %}
+                            <div class="news-item row">
+                                <div class="col-xl-4 col-lg-4 col-md-4 news-item_image">
+                                    <a href="{{ n.viewLink }}" class="text-decoration-none" title="{{ n.title|raw }}">
+                                        {% if(t < 5) %}
+                                            <img src="{{ n.pictureUri }}" alt="{{ n.title|raw }}">
+                                        {% else %}
+                                            <img src="{{ linkSystemImage('/images/grey.gif') }}" data-src="{{ n.pictureUri }}" alt="{{ n.title|raw }}" class="lazyload">
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="col-xl-8 col-lg-8 col-md-8 news-item_content">
+                                    <a href="{{ n.viewLink }}" class="s-popularLink news-item_title" title="{{ n.title|raw }}">{{ n.title|raw }}</a>
+                                    <span class="news-item_dateCreated"><i class="fa-light fa-clock"></i> {{ n.createdDateTime|date('d/m/Y') }}</span>
+                                    <p class="news-item_intro s-textLimit" style="--line:2">{{ n.intro | striptags }}</p>
+                                    <a href="{{ n.viewLink }}" class="news-item_link" title="{{ n.title|raw }}">{{ translate('Đọc tiếp') }}</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="pagination">
+                            {{ render_paginator(paginator, 2) }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-lg-9 col-12">{{ translate('Bài viết đang cập nhật') }}</div>
+                {% endif %}
+                {% set lastestNews= getHotNews({'limit':4}) %}
+                {% if(lastestNews is not empty) %}
+                    <div class="col-lg-3 col-12 news-hot">
+                        <div class="sticky-top">
+                            <p class="news-title">{{ translate('Tin tức nổi bật') }}</p>
+                            <div class="posts">
+                                {% for i in lastestNews %}
+                                    <div class="post">
+                                        <div class="post-thumb">
+                                            <a href="{{ i.viewLink }}" title="{{ i.title }}" class="s-popularLink">
+                                                <img src="{{ linkSystemImage('/images/grey.gif') }}" class="lazyload" data-src="{{ i.imageUri }}" alt="{{ i.title|raw }}" >
+                                            </a>
+                                        </div>
+                                        <div class="post-content">
+                                            <a href="{{ i.viewLink }}" title="{{ i.title }}" class="post-title s-popularLink s-textLimit" style="--line:2">{{ i.title }}</a>
+                                            <p class="post-date">{{ i.createdDateTime | date('d/m/Y') }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+{% endblock %}

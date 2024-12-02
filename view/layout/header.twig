@@ -1,0 +1,101 @@
+{% set categories = getCategories() %}
+<header>
+    <div class="container">
+        <div class="header">
+            <div class="row align-items-center">
+                <div class="col-xl-2 col-6">
+                    <a href="/" class="s-popularLink">
+                        <img src="{{ getBusinessLogo() }}" alt="logo" width="155px" height="45px" class="header-logo">
+                    </a>
+                </div>
+                <div class="col-xl-5 col-lg-12 header-searchBox">
+                    {% if categories is not empty %}
+                        {% set i = 1 %}
+                        <div class="header-searchBox_top">
+                            <ul class="searchKey-list d-flex">
+                                {% for c in categories %}
+                                    <li class="searchKey-item">
+                                        <a href="/search?category={{ c.id }}" class="s-popularLink">{{ c.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <div class="header-searchBox_bottom searchBox input-group d-flex">
+                        <button class="navbar-toggler c-navbarBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                                aria-controls="offcanvasNavbar">
+                            <span class="navbar-toggler-icon"><i class="fa-sharp fa-light fa-bars"></i></span>
+                        </button>
+                        <form action="/search" id="_searchForm" class="searchBox-form">
+                            <input type="text" class="form-control _txtSearch searchBox-input" name="q" required placeholder="{{ translate('Tìm sản phẩm...') }}" aria-label="{{ translate('Tìm sản phẩm') }}">
+                            <button type="submit" class="searchBox-button"><i class="fa-light fa-magnifying-glass fa-2xl"></i></button>
+                        </form>
+                        <div class="search_box">
+                            <div id="searchFolding" class="_searchFolding"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-6 header-rightBox">
+                    <div class="header-rightBox_top sloganBox d-flex">
+                        <div class="sloganBox-item">
+                            <i class="fa-duotone fa-solid fa-fire fa-xl"></i>
+                        </div>
+                        <div class="sloganBox-text d-flex flex-column">
+                            <span class="slogan slogan1">{{ translate('Đồ ăn Dino ăn là mập nhưng mà ngonnn!!!') }}</span>
+                            <span class="slogan slogan2">{{ translate('Đồ ăn ngon ngại gì không thử') }}</span>
+                            <span class="slogan slogan3">{{ translate('Tưởng không giòn nhưng mà giòn thật') }}</span>
+                        </div>
+                    </div>
+                    <div class="header-rightBox_bottom quickMenu">
+                        <ul class="quickMenu-list d-flex justify-content-end align-items-center">
+                            <li class="quickMenu-line" title="{{ translate('Sản phẩm yêu thích') }}">
+                                <a href="/wishlist" class="s-popularLink quickMenu-link">
+                                    <button class="quickMenu-item"><i class="fa-solid fa-heart"></i></button>
+                                    <span class="quickMenu-text">{{ translate('Sản phẩm yêu thích') }}</span>
+                                </a>
+                            </li>
+                            <li class="quickMenu-line" title="{{ translate('Đăng ký CTV/Đại lý') }}">
+                                <a href="#" class="s-popularLink quickMenu-link">
+                                    <button class="quickMenu-item"><i class="fa-regular fa-clipboard-list-check"></i></button>
+                                    <span class="quickMenu-text">{{ translate('Đăng ký CTV/Đại lý') }}</span>
+                                </a>
+                            </li>
+                            <li class="quickMenu-line" title="{{ translate('Tài khoản của bạn') }}">
+                                <a href="/profile" class="s-popularLink quickMenu-link">
+                                    <button class="quickMenu-item"><i class="fa-solid fa-user"></i></button>
+                                    <span class="quickMenu-text">{{ translate('Tài khoản của bạn') }}</span>
+                                </a>
+                            </li>
+                            <li class="quickMenu-line _miniCart"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-xl navbar-custom header-menu">
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-body align-items-center">
+                    {% include 'other/menu' %}
+                    <div class="header-mainMenu">
+                        <ul class="menu-list text-nowrap d-flex">
+                            {% if(menuIsExisted({'type': 'header' })) %}
+                                {% include 'other/menu_custom' %}
+                            {% else %}
+                                {% include 'other/menu' %}
+                            {% endif %}
+                        </ul>
+                        <div class="d-flex align-items-center header-hotline hotline">
+                            <div class="hotline-icon d-flex justify-content-center align-items-center me-2">
+                                <i class="fa-regular fa-truck-fast fa-2xl"></i>
+                            </div>
+                            <div class="hotline-info d-flex flex-column">
+                                <a href="tel:{{ getKeyContentValue('HOTLINE') }}" class="text-decoration-none hotline-info_phone">{{ getKeyContentValue('HOTLINE') }}</a>
+                                <span class="hotline-info_text">{{ translate('Giao hàng siêu tốc') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

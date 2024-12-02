@@ -1,0 +1,105 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle('Giỏ hàng').setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="keywords" content="{{ getKeyContentValue('META_KEYWORDSs') }}">
+    <meta name="description" content="{{ getKeyContentValue('META_DESCRIPTION') }}">
+    <meta property="og:title" content="{{ getKeyContentValue('META_TITLE') }}">
+    <meta property="og:url" content="{{ getCurrentUrl() }}">
+    <meta property="og:image" content="{{ getBusinessLogo() }}">
+{% endblock %}
+
+{% block body %}
+    {% set products = serviceCart().productList %}
+    {% set totalCartMoney = serviceCart().totalMoney %}
+    <div class="wrapper orderWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ translate('Giỏ hàng') }}</p>
+                {% set buildBread  = [{'label': translate('Giỏ hàng'), 'uri':'/cart'}] %}
+                {{ render_breadcrumb(buildBread ) }}
+            </section>
+            <section class="cart">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="cart-title">{{ translate("Giỏ hàng") }}</div>
+                    </div>
+                    {% if products is not empty %}
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                            <div class="couponAvailable d-flex justify-content-between align-items-center">
+                                <p class="couponAvailable-label">
+                                    <span class="couponAvailable-item"><i class="fa-solid fa-ticket-simple fa-lg"></i></span>
+                                    {{ translate('Mã khuyến mãi') }}
+                                </p>
+                                <a href="" data-bs-toggle="modal" data-bs-target="#couponListModal" class="couponAvailable-link">{{ translate('Xem chi tiết') }}</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 cart-box">
+                            <div class="cart-content">
+                                <div class="row cart-box_title">
+                                    <div class="col-lg-6 col-md-5">{{ translate('Thông tin sản phẩm') }}</div>
+                                    <div class="col-lg-2 col-md-2">{{ translate('Đơn giá') }}</div>
+                                    <div class="col-lg-2 col-md-3">{{ translate('Số lượng') }}</div>
+                                    <div class="col-lg-2 col-md-2">{{ translate('Thành tiền') }}</div>
+                                </div>
+                                <div class="cart-body">
+                                    {% for p in products %}
+                                        {% set price = p.price %}
+                                        {% if (p.priceAfterDiscount > 0) %}
+                                            {% set price = p.priceAfterDiscount %}
+                                        {% endif %}
+                                        <div class="row cart-item">
+                                            <div class="col-lg-6 col-md-5 cart-item_info">
+                                                <img class="info-thumb img-bg_sky" src="{{ p.thumbnailUri }}" alt="{{ p.name }}">
+                                                <div class="info-name">
+                                                    <a class="s-secondaryLink pName" href="{{ p.viewLink }}">{{ p.name }}</a>
+                                                    <a class="s-secondaryLink remove _removeCart" data-id="{{ p.id }}">{{ translate('Xoá') }}</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2 cost-currency cart-item_cost">
+                                                {% if(p.contactPrice or (p.price == 0)) %}
+                                                    {{ translate('Liên hệ') }}
+                                                {% else %}
+                                                    {{ price|number_format(0) }}<sup>₫</sup>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-lg-2 col-md-3 cart-item_number">
+                                                <button class="cart-mini_btn btn-decrease _subtract" data-id="{{ p.id }}">-</button>
+                                                <input aria-label="quantity" class="cart-mini_number number-only _productQtt_{{ p.id }}" data-id="{{ p.id }}" type="text" data-max="{{ p.inventory.available }}" value="{{ p.quantity }}">
+                                                <button class="cart-mini_btn btn-decrease _plus" data-id="{{ p.id }}">+</button>
+                                            </div>
+                                            <div class="col-lg-2 col-md-2 cost-currency cart-item_totalCost">{{ (price*p.quantity)|number_format(0) }}<sup>₫</sup></div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-8 col-sm-6 col-12">
+                                    <a href="/" class="s-popularLink">{{ translate('Tiếp tục mua hàng') }}</a>
+                                </div>
+                                <div class="col-lg-4 col-sm-6 col-12 cart-payment">
+                                <div class="cart-payment_label">
+                                    <p class="text-uppercase">{{ translate('Tổng tiền') }}: </p>
+                                    <p class="cost-currency" value="{{ totalCartMoney }}">{{ totalCartMoney|number_format(0) }}<sup>₫</sup></p>
+                                </div>
+                                <a class="btn-payment" href="cart/checkout">{{ translate('Thanh toán') }}</a>
+                            </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-12">
+                            <p>{{ translate('Không có sản phẩm nào trong giỏ hàng của bạn') }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

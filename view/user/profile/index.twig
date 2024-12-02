@@ -1,0 +1,122 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle('Thông tin người dùng').setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="description" content="Thông tin người dùng">
+    <meta name="keywords" content="Thông tin người dùng">
+    <meta property="og:url" content="{{ getCurrentUrl() }}">
+    <meta property="og:title" content="Thông tin người dùng">
+    <meta property="og:type" content="article">
+    <link rel="canonical" href="{{  getCurrentUrl() }}">
+{% endblock %}
+
+{% block body %}
+    {% set level = 0 %}
+    {% set point = 0 %}
+    {% if user is not empty %}
+        {% set customer = getCustomerStore({'mobile':user.mobile}) %}
+        {% if customer is not empty %}
+            {% if customer.points > 0 %}
+                {% set point = customer.points %}
+            {% endif %}
+            {% set level = customer.levelName %}
+        {% endif %}
+    {% endif %}
+    <div class="wrapper userWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ translate('Trang khách hàng') }}</p>
+                {% set buildBread  = [{'label': translate('Trang khách hàng'), 'uri':'/user/profile'}] %}
+                {{ render_breadcrumb(buildBread ) }}
+            </section>
+            <section class="users">
+                <div class="row">
+                    <div class="col-lg-3 account-option">
+                        <h5>{{ translate('trang tài khoản') }}</h5>
+                        <div class="fw-bold">{{ translate('Xin chào,') }} <p class="d-inline" style="color:#f93">{{ user.fullName }}</p></div>
+                        <div class="mb-3">
+                            <div class="text-warning">
+                                <i class="fa-sharp fa-solid fa-trophy-star"></i>
+                                {{ translate('Hạng thành viên: ') }}{{ level }}
+                            </div>
+                            <div class="text-info">
+                                <i class="fa-solid fa-hundred-points"></i>
+                                {{ translate('Điểm tích lũy: ') }}{{ point }}
+                            </div>
+                        </div>
+                        <ul class="account-option_list">
+                            <li><a href="/profile" class="s-popularLink active">{{ translate('Thông tin tài khoản') }}</a></li>
+                            <li><a href="/order" class="s-popularLink">{{ translate('Đơn hàng của bạn') }}</a></li>
+                            <li><a href="/profile/changepassword" class="s-popularLink">{{ translate('Đổi mật khẩu') }}</a></li>
+                            <li><a href="/user/signout" class="s-popularLink">{{ translate('Đăng xuất') }}</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-9 account-option">
+                        <h5 class="d-flex align-items-center gap-1">{{ translate('thông tin tài khoản') }}
+                            <a href="/profile/edit" class="m-0 text-primary">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        </h5>
+                        <ul class="account-option_list">
+                            <li>
+                                <p>
+                                    <span class="fw-bold">{{ translate('Họ tên: ') }}</span>
+                                    {{ user.fullName ? user.fullName : customer.name }}
+                                </p>
+                            </li>
+                            {% if(user.birthday) is not empty %}
+                                <li>
+                                    <p>
+                                        <span class="fw-bold">{{ translate('Ngày sinh: ') }}</span>
+                                        {{ user.birthday }}
+                                    </p>
+                                </li>
+                            {% endif %}
+                            {% if(user.gender) is not empty %}
+                                <li>
+                                    <p>
+                                        <span class="fw-bold">{{ translate('Giới tính: ') }}</span>
+                                        {{ user.gender == 1 ? "Nam" : "Nữ" }}
+                                    </p>
+                                </li>
+                            {% endif %}
+                            <li>
+                                    <p>
+                                        <span class="fw-bold">{{ translate('Email: ') }}</span>
+                                        {{ user.email }}
+                                    </p>
+                            </li>
+                            <li>
+                                <p>
+                                    <span class="fw-bold">{{ translate('Số điện thoại: ') }}</span>
+                                    {{ user.mobile ? user.mobile : customer.phone }}
+                                </p>
+                            </li>
+                            <li>
+                                {% if(user.address) %}
+                                    {% set address = user.address %}
+                                {% else %}
+                                    {% set address = customer.address %}
+                                    {% set address = address ~ (user.options['wardName'] ? ',' ~ user.options['wardName'] : '') %}
+                                    {% set address = address ~ (user.options['districtName'] ? ',' ~ user.options['districtName'] : '') %}
+                                    {% set address = address ~ (user.options['cityName'] ? ',' ~ user.options['cityName'] : '') %}
+                                {% endif %}
+                                <p>
+                                    <span class="fw-bold">{{ translate('Địa chỉ: ') }}</span>
+                                    {{ address }}
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

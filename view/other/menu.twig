@@ -1,0 +1,88 @@
+
+{% set nav = "" %}
+
+    {% if(getCategories()) %}
+        {% set nav = nav ~ '<div class="header-category">' %}
+            {% set nav = nav ~ '<div class="header-category_title">' ~ translate("Danh mục sản phẩm") ~ '</div>' %}
+                {% set nav = nav ~ '<div class="header-category_list">' %}
+                    {% set nav = nav ~ '<ul class="category-list">' %}
+                    {% for c in getCategories() %}
+                        {% set nav = nav ~ '<li class="category-item">' %}
+                        {% set nav = nav ~ '<a class="s-popularLink"' ~ ' href="' ~ c.viewLink ~ '">' ~ c.name ~ '</a>' %}
+                        {% if(c.childs is not empty) %}
+                            {% set nav = nav ~ '<i class="fa-solid fa-chevron-up j-dropdown"></i>' %}
+                            {% set nav = nav ~ '<ul class="category-item_submenu j-submenu" style="list-style-type:disc;padding-left:10%;">' %}
+                            {% for c1 in c.childs %}
+                                {% set nav = nav ~ '<li class="submenu-item">' %}
+                                {% set nav = nav ~ '<a href="' ~ c1.viewLink ~ '" class="s-popularLink">' ~ c1.name ~ '</a>' %}
+                                {% if(c1.childs is not empty) %}
+                                    {% set nav = nav ~ '<ul class="category-item_submenuSmaller">' %}
+                                    {% for c2 in c1.childs %}
+                                        {% set nav = nav ~ '<li>' %}
+                                        {% set nav = nav ~ '<a href="' ~ c2.viewLink ~ '" class="s-popularLink">' ~ c2.name ~ '</a>' %}
+                                        {% if(c2.childs is not empty) %}
+                                            {% set nav = nav ~ '<ul class="category-item_submenuSmaller">' %}
+                                            {% for c3 in c2.childs %}
+                                                {% set nav = nav ~ '<li>' %}
+                                                {% set nav = nav ~ '<a href="' ~ c3.viewLink ~ '" class="s-popularLink">' ~ c3.name ~ '</a>' %}
+
+                                                {% set nav = nav ~ '</li>' %}
+                                            {% endfor %}
+                                            {% set nav = nav ~ '</ul>' %}
+                                        {% endif %}
+                                        {% set nav = nav ~ '</li>' %}
+                                    {% endfor %}
+                                    {% set nav = nav ~ '</ul>' %}
+                                {% endif %}
+                                {% set nav = nav ~ '</li>' %}
+                            {% endfor %}
+                            {% set nav = nav ~ '</ul>' %}
+                        {% endif %}
+                        {% set nav = nav ~ '</li>' %}
+                    {% endfor %}
+                    {% set nav = nav ~ '</ul>' %}
+                        {% set nav = nav ~ '<div class="item-filter">' %}
+                        {% set nav = nav ~ '<h2 class="title-filter fw-semibold">Chọn mức giá</h2>' %}
+                        {% set price_ranges = [
+                            ["0", "200000"],
+                            ["200000", "350000"],
+                            ["350000", "500000"],
+                            ["500000", "800000"],
+                            ["800000", "1000000"],
+                            ["1000000", "0"],
+                        ] %}
+                        {% set nav = nav ~ '<ul>' %}
+                        {% set price_param = getParam('price') %}
+                        {% for range in price_ranges %}
+                            {% set min_price = range[0]|number_format(0, '.', '') %}
+                            {% set max_price = range[1]|number_format(0, '.', '') %}
+                            {% set range_string = min_price ~ ':' ~ max_price %}
+                            {% if(range_string in price_param) %}
+                                {% set filter = removeFilter('price', range_string) %}
+                                {% set checked =  'checked' %}
+                            {% else %}
+                                {% set filter = addFilter('price', range_string) %}
+                                {% set checked =  '' %}
+                            {% endif %}
+
+                            {% set nav = nav ~ '<li class="form-check filter-item pt-1 pb-1 mb-0 ">' %}
+                            {% set nav = nav ~ '<input id="filter'~ filter ~'" aria-label="filter" type="checkbox"
+                                                       value="'~ filter ~'" '~ checked ~' class="form-check-input filter-check">' %}
+                            {% set nav = nav ~ '<label class="d-flex align-items-center" for="filter'~ filter ~'">' %}
+                            {% if(min_price == 0 and max_price == 200000) %}
+                                {% set nav = nav ~ 'Dưới ' ~ max_price/1000|number_format(0, '.', '') ~ 'k' %}
+                            {% elseif (min_price == 1000000 and max_price == 0) %}
+                                {% set nav = nav ~ 'Trên 1 triệu' %}
+                            {% else %}
+                                {% set nav = nav ~ 'Từ ' ~ min_price/1000|number_format(0, '.', '') ~ 'k - ' ~ max_price/1000|number_format(0, '.', '') ~ 'k' %}
+                            {% endif %}
+                            {% set nav = nav ~ '</label>' %}
+                            {% set nav = nav ~ '</li>' %}
+                        {% endfor %}
+                        {% set nav = nav ~ '</ul>' %}
+                    {% set nav = nav ~ '</div>' %} {# End .item-filter #}
+                {% set nav = nav ~ '</div>' %}
+        {% set nav = nav ~ '</div>' %}
+    {% endif %}
+{{ nav | raw }}
+

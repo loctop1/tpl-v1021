@@ -1,0 +1,396 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle('Trang chủ').setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="keywords" content="{{ getKeyContentValue('META_KEYWORDS') }}">
+    <meta name="description" content="{{ getKeyContentValue('META_DESCRIPTION') }}">
+    <meta property="og:title" content="{{ getKeyContentValue('META_TITLE') }}">
+    <meta property="og:url" content="{{ getCurrentUrl() }}">
+    <meta property="og:image" content="{{ getBusinessLogo() }}">
+{% endblock %}
+{% block body %}
+    <div class="wrapper">
+        <div class="container">
+        {% set categories = getCategories() %}
+            <section class="banner">
+                <div class="banner-primary">
+                    {% set banner_home = getBannerByPositionCode('BANNER_HOME_PRIMARY') %}
+                    {% if(banner_home is not empty) %}
+                        {% for c in banner_home %}
+                            {% if(loop.first) %}
+                                <a href="{{ c.viewLink }}">
+                                    <img src="{{ c.imagesrc }}" alt="{{ c.name }}">
+                                </a>
+                            {% else %}
+                                <a href="{{ c.viewLink }}">
+                                    <img src="{{ linkSystemImage('/images/grey.gif') }}" alt="{{ c.name }}" data-lazy="{{ c.imageSrc }}">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <a href="/">
+                            <img src="https://dummyimage.com/1920x694/f93/fff"
+                                 alt="banner-primary">
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="banner-sub row">
+                    {% set banner_home = getBannerByPositionCode('BANNER_HOME_SUB') %}
+                    {% if(banner_home is not empty) %}
+                        {% for c in banner_home %}
+                            <a class="banner-sub_link col-5" href="{{ c.viewLink }}">
+                                <img src="{{ c.imagesrc }}" alt="{{ c.name }}">
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        {% for i in 1..2 %}
+                            <a class="banner-sub_link col-5" href="/">
+                                <img src="https://dummyimage.com/600x307/FDEAB1/fff"
+                                     alt="banner-primary">
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </section>
+            {% set promotionId = getKeyContentValue('PROMOTION_ID') | e('html') %}
+            {% if promotionId is not null %}
+                {% set promotion = getPromotions({'id':promotionId,'limit':1}) %}
+                {% if(promotion is not empty) %}
+                    {% set promotionObj = promotion|first %}
+                    <section class="promoProduct" style="background-image: url('{{ promotionObj.bannerUri }}')">
+                        <div class="promoProduct-box">
+                            <div class="promoProduct-title row">
+                                <div class="promoProduct-title_text col-xl-6 col-12">
+                                    <a href="{{ promotionObj.viewLink }}" class="s-title_link">{{ promotionObj.name }}</a>
+                                </div>
+                                <div class="promoProduct-title_time col-xl-6 col-12">
+                                    <div class="timer-view" data-countdown="countdown"
+                                         data-date="{{ promotionObj.endDate | date("F j Y") }} 23:59:00">
+                                        <div class="block-timer"><p><b class="days"></b></p><span>Ngày</span></div>
+                                        <span style="font-size:30px;font-weight: 600;color:#fff ">:</span>
+                                        <div class="block-timer"><p><b class="hours"></b></p><span>Giờ</span></div>
+                                        <span style="font-size:30px;font-weight: 600;color:#fff ">:</span>
+                                        <div class="block-timer"><p><b class="minutes"></b></p><span>Phút</span></div>
+                                        <span style="font-size:30px;font-weight: 600;color:#fff ">:</span>
+                                        <div class="block-timer"><p><b class="seconds"></b></p><span>Giây</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% set promotionProduct = getPromotionProduct({'id':promotion.id,'limit':10}) %}
+                            {% if(promotionProduct is not empty) %}
+                                <div class="promoProduct-products">
+                                <div class="promoProduct-products_slide">
+                                    {% for p in promotionProduct %}
+                                        {% set priceDiscount = p.priceAfterDiscount %}
+                                        <div class="promoProduct-products_box">
+                                            <div class="card product _productItem" data-id="{{ p.id }}" data-type="{{ p.typeId }}">
+                                                <div class="card-img-top product-preview">
+                                                    {% if(p.calcDiscountPercent > 0) %}
+                                                        <span class="product-label_discount">- {{ p.calcDiscountPercent }}%</span>
+                                                    {% endif %}
+                                                    <div class="product-label_hidden">
+                                                        <span class="product-label_view _quickView" data-id="{{ p.id }}">{{ translate('Xem nhanh') }}</span>
+                                                        {% if( (p.contactPrice is not null) or (p.price!=0)) %}
+                                                            <span class="product-label_buy">
+                                                                {% set dataCk = 1 %}
+                                                                    {% set dataHref = 'javascript:void(0)' %}
+                                                                    {% set dataTitle = 'Mua ngay' %}
+                                                                    {% if(p.isParent) %}
+                                                                        {% set dataCk = 0 %}
+                                                                        {% set dataHref = p.viewLink %}
+                                                                        {% set dataTitle = 'Tùy chọn' %}
+                                                                    {% endif %}
+                                                                <a href="{{ dataHref }}" class="_addCartWidget text-decoration-none text-light" data-id="{{ p.id }}" data-ck="{{ dataCk }}">{{ dataTitle }}</a>
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <span class="product-label_favorite">
+                                                        <div class="icon-favorite_plus">
+                                                            <i class="fa-light fa-star"></i>
+                                                        </div>
+                                                        {{ translate("Yêu thích +") }}
+                                                    </span>
+                                                    <span class="product-label_like _addWishList" data-id="{{ p.id }}">
+                                                        <i class="fa-solid fa-heart"></i>
+                                                    </span>
+                                                    <a href="{{ p.viewLink }}" class="text-decoration-none text-light">
+                                                        <div class="product-thumb">
+                                                            <img src="{{ linkSystemImage('/images/grey.gif') }}" data-src="{{ p.imageUri }}" alt="{{ p.name }}" class="lazyload">
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                            <div class="card-body product-info">
+                                                <h5 class="card-title product-name"><a href="{{ p.viewLink }}" style="--line:2" class="s-popularLink s-textLimit text-capitalize">{{ p.name|raw }}</a></h5>
+                                                {% if(p.contactPrice or (p.price == 0)) %}
+                                                    <p class="product-price">{{ translate('Liên hệ') }}</p>
+                                                {% elseif(priceDiscount > 0 ) %}
+                                                    <p class="product-price">
+                                                        {{ priceDiscount|number_format(0) }}<sup>₫</sup>
+                                                        <span class="product-oldPrice">{{ p.price|number_format(0) }}<sup>₫</sup></span>
+                                                    </p>
+                                                {% else %}
+                                                    {% if (p.oldPrice > 0) %}
+                                                        <p class="product-price">
+                                                            {{ p.price|number_format(0) }}<sup>₫</sup>
+                                                            <span class="product-oldPrice">{{ p.oldPrice|number_format(0) }}<sup>₫</sup></span>
+                                                        </p>
+                                                    {% else %}
+                                                        <p class="product-price">{{ p.price|number_format(0) }}<sup>₫</sup></p>
+                                                    {% endif %}
+                                                {% endif %}
+                                                <div class="product-count">
+                                                    <div class="product-count_item">
+                                                        <span class="product-count_saled">0</span>
+                                                        <span class="product-count_countdown" style="width: 100%"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <a href="/san-pham" class="s-popularLink text-center fw-bold">
+                                    {{ translate('Xem tất cả sản phẩm ') }}
+                                    <i class="fa-regular fa-arrow-right"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </section>
+                {% endif %}
+            {% endif %}
+                {% if categories is not empty %}
+                    {% set categoryId  = null %}
+                    <section class="allProduct s-bgPink">
+                        {% set bannerProduct = getCurrentBannerByCode('BANNER_HOME_PRODUCT',{'limit':1}) %}
+                        <div class="allProduct-banner">
+                        {% if bannerProduct is not empty %}
+                            {% set bn = bannerProduct | first %}
+                            <a href="{{ bn.viewLink }}">
+                                <img class="allProduct-banner_content lazyload"
+                                     data-src="{{ bn.imageSrc }}"
+                                     src="{{ linkSystemImage('/images/grey.gif') }}"
+                                     alt="{{ bn.name }}">
+                            </a>
+                        {% else %}
+                            <a href="/">
+                                <img class="allProduct-banner_content"
+                                     src="https://dummyimage.com/1570x164/f93/fff"
+                                     alt="tat-ca-san-pham">
+                            </a>
+                        {% endif %}
+                        </div>
+                        <div class="allProduct-box sectionBox">
+                            <a class="s-popularLink sectionBox-title text-uppercase">{{ translate('Sản phẩm nổi bật') }}</a>
+
+                            <ul class="allProduct-box_menu category-list">
+                                {% for c in categories %}
+                                    {% if loop.first %}
+                                        {% set categoryId = c.id %}
+                                    {% endif %}
+                                    <li class="category-item _category j-categoryItem {{ loop.first ? 'active' : '' }}">
+                                        <a class="_category" title="{{ c.name }}" type="button"
+                                           data-id="{{ c.id }}">{{ c.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+
+                            {% if categoryId is not empty %}
+                            {% set product = searchProducts({'limit':10, 'categoryId': categoryId}) %}
+                                <div class="allProduct-box_list _products">
+                                {% if(product is not empty) %}
+                                    {% for p in product %}
+                                        <div class="card product _productItem" data-id="{{ p.id }}" data-type="{{ p.typeId }}">
+                                            <div class="card-img-top product-preview">
+                                                {% if(p.calcDiscountPercent > 0) %}
+                                                    <span class="product-label_discount">- {{ p.calcDiscountPercent }}%</span>
+                                                {% endif %}
+                                                <div class="product-label_hidden">
+                                                    <span class="product-label_view _quickView" data-id="{{ p.id }}">{{ translate('Xem nhanh') }}</span>
+                                                    {% if( (p.contactPrice is not null) or (p.price!=0)) %}
+                                                        <span class="product-label_buy">
+                                                            {% set dataCk = 1 %}
+                                                            {% set dataHref = 'javascript:void(0)' %}
+                                                            {% set dataTitle = 'Mua ngay' %}
+                                                            {% if(p.isParent) %}
+                                                                {% set dataCk = 0 %}
+                                                                {% set dataHref = p.viewLink %}
+                                                                {% set dataTitle = 'Tùy chọn' %}
+                                                            {% endif %}
+                                                            <a href="{{ dataHref }}" class="_addCartWidget text-decoration-none text-light" data-id="{{ p.id }}" data-ck="{{ dataCk }}">{{ dataTitle }}</a>
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
+                                                <span class="product-label_like _addWishList" data-id="{{ p.id }}">
+                                                    <i class="fa-solid fa-heart"></i>
+                                                </span>
+                                                <a href="{{ p.viewLink }}" class="text-decoration-none text-light">
+                                                    <div class="product-thumb">
+                                                        <img src="{{ linkSystemImage('/images/grey.gif') }}" data-src="{{ p.imageUri }}" alt="{{ p.name }}" class="lazyload">
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <div class="card-body product-info">
+                                                <h5 class="card-title product-name"><a href="{{ p.viewLink }}" style="--line:2" class="s-popularLink s-textLimit text-capitalize">{{ p.name|raw }}</a></h5>
+                                                {% if(p.contactPrice or (p.price == 0)) %}
+                                                    <p class="product-price">{{ translate('Liên hệ') }}</p>
+                                                {% elseif(priceDiscount > 0 ) %}
+                                                    <p class="product-price">
+                                                        {{ priceDiscount|number_format(0) }}<sup>₫</sup>
+                                                        <span class="product-oldPrice">{{ p.price|number_format(0) }}<sup>₫</sup></span>
+                                                    </p>
+                                                {% else %}
+                                                    {% if (p.oldPrice > 0) %}
+                                                        <p class="product-price">
+                                                            {{ p.price|number_format(0) }}<sup>₫</sup>
+                                                            <span class="product-oldPrice">{{ p.oldPrice|number_format(0) }}<sup>₫</sup></span>
+                                                        </p>
+                                                    {% else %}
+                                                        <p class="product-price">{{ p.price|number_format(0) }}<sup>₫</sup></p>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-center no-product pt-3 pb-3">{{ translate('Sản phẩm đang được cập nhật') }}</p>
+                                {% endif %}
+                                </div>
+                            {% endif %}
+                            <a href="/san-pham" class="s-popularLink text-center fw-bold">
+                                {{ translate('Xem tất cả sản phẩm') }}
+                                <i class="fa-regular fa-arrow-right"></i></a>
+                        </div>
+                </section>
+            {% endif %}
+            {% set hotProducts = searchProducts({'limit':10,'showHot':1}) %}
+            {% if(hotProducts is not empty) %}
+                <section class="hotProduct">
+                    <div class="sectionBox">
+                        <a class="s-popularLink sectionBox-title text-uppercase">{{ translate('Combo tiết kiệm') }}</a>
+                            <div class="allProduct-box_list">
+                                {% for p in hotProducts %}
+                                    <div class="card product _productItem" data-id="{{ p.id }}" data-type="{{ p.typeId }}">
+                                        <div class="card-img-top product-preview">
+                                            {% if(p.calcDiscountPercent > 0) %}
+                                                <span class="product-label_discount">- {{ p.calcDiscountPercent }}%</span>
+                                            {% endif %}
+                                            <div class="product-label_hidden">
+                                                <span class="product-label_view _quickView" data-id="{{ p.id }}">{{ translate('Xem nhanh') }}</span>
+                                                {% if( (p.contactPrice is not null) or (p.price!=0)) %}
+                                                    <span class="product-label_buy">
+                                                        {% set dataCk = 1 %}
+                                                            {% set dataHref = 'javascript:void(0)' %}
+                                                            {% set dataTitle = 'Mua ngay' %}
+                                                            {% if(p.isParent) %}
+                                                                {% set dataCk = 0 %}
+                                                                {% set dataHref = p.viewLink %}
+                                                                {% set dataTitle = 'Tùy chọn' %}
+                                                            {% endif %}
+                                                        <a href="{{ dataHref }}" class="_addCartWidget text-light text-decoration-none" data-id="{{ p.id }}" data-ck="{{ dataCk }}">{{ dataTitle }}</a>
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            <span class="product-label_like _addWishList" data-id="{{ p.id }}">
+                                                <i class="fa-solid fa-heart"></i>
+                                            </span>
+                                            <a href="{{ p.viewLink }}" class="text-decoration-none text-light">
+                                                <div class="product-thumb">
+                                                 <img src="{{ linkSystemImage('/images/grey.gif') }}" data-src="{{ p.imageUri }}" alt="{{ p.name }}" class="lazyload">
+                                                </div>
+                                            </a>
+                                        </div>
+
+                                        <div class="card-body product-info">
+                                            <h5 class="card-title product-name"><a href="{{ p.viewLink }}" style="--line:2" class="s-popularLink s-textLimit text-capitalize">{{ p.name|raw }}</a></h5>
+                                            {% if(p.contactPrice or (p.price == 0)) %}
+                                                <p class="product-price">{{ translate('Liên hệ') }}</p>
+                                            {% elseif(priceDiscount > 0 ) %}
+                                                <p class="product-price">
+                                                    {{ priceDiscount|number_format(0) }}<sup>₫</sup>
+                                                    <span class="product-oldPrice">{{ p.price|number_format(0) }}<sup>₫</sup></span>
+                                                </p>
+                                            {% else %}
+                                                {% if (p.oldPrice > 0) %}
+                                                    <p class="product-price">
+                                                        {{ p.price|number_format(0) }}<sup>₫</sup>
+                                                        <span class="product-oldPrice">{{ p.oldPrice|number_format(0) }}<sup>₫</sup></span>
+                                                    </p>
+                                                {% else %}
+                                                    <p class="product-price">{{ p.price|number_format(0) }}<sup>₫</sup></p>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        <a href="/san-pham?showHot=1" class="s-popularLink text-center fw-bold">
+                            {{ translate('Xem tất cả sản phẩm') }}
+                            <i class="fa-regular fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </section>
+            {% endif %}
+            {% set lastestNews = getHotNews({'limit':4}) %}
+            {% if(lastestNews is not empty) %}
+                <section class="HP-news">
+                    <div class="sectionBox">
+                        <a class="s-popularLink sectionBox-title text-uppercase">{{ translate('Tin tức') }}</a>
+                        <div class="HP-news_slide">
+                            {% for i in lastestNews %}
+                                <div class="HP-news_box">
+                                    <div class="HP-news_thumb">
+                                        <img class="lazyload"
+                                             data-src="{{ i.imageUri }}"
+                                             src="{{ linkSystemImage('/images/grey.gif') }}"
+                                            alt="{{ i.title }}">
+                                    </div>
+                                    <div class="HP-news_content news-content">
+                                        <a href="{{ i.viewLink }}" class="news-content_title s-textLimit text-decoration-none" style="--line:2" title="{{ i.title }}">{{ i.title }}</a>
+                                        <p class="news-content_time">
+                                            <span class="s-textLimit" style="--line:2">{{ i.fullName ? i.fullName : 'Author' }}</span>
+                                            <span>{{ i.createdDateTime|date('d/m/Y') }}</span>
+                                        </p>
+                                        <p class="news-content_intro s-textLimit" style="--line:3">{{ subString(i.intro, 500) }}</p>
+                                        <a href="{{ i.viewLink }}" class="read-more text-decoration-none">
+                                            {{ translate('Đọc tiếp ') }}<i class="fa-light fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a href="/news" class="s-popularLink text-center fw-bold">
+                            {{ translate('Xem tất cả tin tức') }}
+                            <i class="fa-regular fa-arrow-right"></i></a>
+                    </div>
+                </section>
+            {% endif %}
+            <section class="policiesBox">
+                <div class="footer-policies row">
+                    <div class="col-4 d-flex align-items-center justify-content-evenly footer-policies_item policy ">
+                        <div class="policy-icon"><i class="fa-light fa-cart-plus fa-2xl"></i></div>
+                        <div class="policy-content">
+                            <p class="policy-content_title">{{ getKeyContentValue("POLICY_FOOTER_TITLE_1") }}</p>
+                            <p class="policy-content_text">{{ getKeyContentValue("POLICY_FOOTER_CONTENT") }}</p>
+                        </div>
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-evenly footer-policies_item policy">
+                        <div class="policy-icon"><i class="fa-light fa-wallet fa-2xl"></i></div>
+                        <div class="policy-content">
+                            <p class="policy-content_title">{{ getKeyContentValue("POLICY_FOOTER_TITLE_2") }}</p>
+                            <p class="policy-content_text">{{ getKeyContentValue("POLICY_FOOTER_CONTENT") }}</p>
+                        </div>
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-evenly footer-policies_item policy">
+                    <div class="policy-icon"><i class="fa-light fa-truck-fast fa-2xl"></i></div>
+                    <div class="policy-content">
+                        <p class="policy-content_title">{{ getKeyContentValue("POLICY_FOOTER_TITLE_3") }}</p>
+                        <p class="policy-content_text">{{ getKeyContentValue("POLICY_FOOTER_CONTENT") }}</p>
+                    </div>
+                </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

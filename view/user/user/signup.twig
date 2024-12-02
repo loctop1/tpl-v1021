@@ -1,0 +1,67 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle('Đăng ký').setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta name="description" content="Đăng ký">
+    <meta name="keywords" content="Đăng ký">
+    <meta property="og:url" content="{{ getCurrentUrl() }}">
+    <link rel="canonical" href="{{  getCurrentUrl() }}">
+    <meta property="og:title" content="Đăng ký">
+    <meta property="og:type" content="article">
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper userWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ translate('Đăng ký') }}</p>
+                {% set buildBread  = [{'label': translate('Đăng ký'), 'uri':'/user/signup'}] %}
+                {{ render_breadcrumb(buildBread ) }}
+            </section>
+            <section class="maps">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 user-form">
+                        {% if(success) %}
+                            <div class="message-success text-center">
+                                <i class="fa-light fa-circle-check fa-2xl text-success fs-1"></i>
+                                <div class="clear"></div>
+                                <div class="text-center text-success fw-bold">{{ message|raw }}</div>
+                            </div>
+                        {% else %}
+                            <p class="user-form_title">{{ translate('Đăng ký') }}</p>
+                            <p class="login-link">
+                                {{ translate('Đã có tài khoản, đăng nhập') }}
+                                <a href="/user/signin" class="text-decoration-none">{{ translate('tại đây') }}</a>
+                            </p>
+                            <div class="login-form">
+                                {{ partial('partial/form',{'form':form}) }}
+                            </div>
+                            <div class="login-option">
+                            <div class="login-option_bottom">
+                                <p class="social-link">{{ translate('Hoặc đăng nhập qua') }}</p>
+                                <div class="social-network-login d-flex">
+                                    <a href="/user/fbsignin" class="social-login fb-login">
+                                        <i class="fa-brands fa-facebook-f me-1"></i>
+                                        Facebook
+                                    </a>
+                                    <a href="/user/ggsignin" class="social-login gp-login">
+                                        <i class="fa-brands fa-google-plus-g ms-1"></i>
+                                        Google
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

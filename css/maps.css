@@ -1,0 +1,123 @@
+.address-detail {
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #f2f2f2;
+}
+.address-detail::-webkit-scrollbar {
+  width: 5px;
+}
+.address-detail::-webkit-scrollbar-track {
+  background: #ccc;
+}
+.address-detail::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.agency-list {
+  list-style-type: none;
+  padding: 0.5rem;
+}
+
+._depotItem {
+  cursor: pointer;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+._depotItem:first-child {
+  padding-top: 0;
+}
+._depotItem:last-child {
+  padding-bottom: 0;
+}
+._depotItem p {
+  margin-bottom: 0.5rem;
+}
+._depotItem p:first-child {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+._depotItem p:first-child::before {
+  content: "\f54e";
+  font-family: "Font Awesome 5 Pro";
+  padding-right: 0.5rem;
+}
+._depotItem p:first-child:hover {
+  color: #630;
+}
+._depotItem p:nth-child(2) {
+  font-size: 0.9rem;
+  color: #000;
+}
+._depotItem p:nth-child(2)::before {
+  content: "\f3c5";
+  font-family: "Font Awesome 5 Pro";
+  padding-right: 0.5rem;
+}
+._depotItem a {
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: #F93 !important;
+}
+._depotItem:not(:last-child) {
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.select-city + .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 44px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.select-district + .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 44px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.select-city .select2-results__options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.select-district .select2-results__options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.stores {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.select2-results__options::-webkit-scrollbar {
+  width: 5px;
+}
+.select2-results__options::-webkit-scrollbar-track {
+  background: #ccc;
+}
+.select2-results__options::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+@media only screen and (max-width: 768px) {
+  .map_part iframe {
+    zoom: 0.75;
+  }
+  .address-detail {
+    max-height: 450px;
+  }
+}
+@media only screen and (max-width: 576px) {
+  .title_address {
+    padding-bottom: 0.5rem;
+  }
+  .select-city_box {
+    padding-bottom: 0.5rem;
+  }
+}
+@media only screen and (max-width: 480px) {
+  .address-detail {
+    max-height: 337.5px;
+  }
+}
+
+/*# sourceMappingURL=maps.css.map */

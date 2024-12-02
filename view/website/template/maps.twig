@@ -1,0 +1,87 @@
+{% extends "layout/layout" %}
+{% block meta %}
+    {{ headTitle('Hệ thống cửa hàng').setSeparator(' - ').setAutoEscape(false)|raw }}
+    <meta property="og:title" content="hệ thống đại lý">
+    <meta property="og:url" content="{{ getCurrentUrl() }}">
+    <meta property="og:type" content="article">
+{% endblock %}
+
+{% block body %}
+    {% set cityId = getParam('cityId') %}
+    {% if(cityId > 0) %}
+        <input type="hidden" value="{{ cityId }}" class="checkCityId">
+        {% set agencyList = searchAgency({'id':cityId}) %}
+    {% else %}
+        {% set agencyList = searchAgency() %}
+    {% endif %}
+    <div class="wrapper mapsWrapper">
+        <div class="container">
+            {% set banner_breadcrumb = getCurrentBannerByCode('BANNER_BREADCRUMB',{'limit':1}) %}
+            {% if(banner_breadcrumb is not empty) %}
+                {% set banner = banner_breadcrumb | first %}
+                {% set banner_link = banner.imageSrc %}
+            {% else %}
+                {% set banner_link = 'https://dummyimage.com/1570x165/fee9b0/fff'%}
+            {% endif %}
+            <section class="bread-crumb"
+                     style="background: linear-gradient(0deg, rgba(0,0,0,0), rgba(0,0,0,0)),  url('{{ banner_link }}') center no-repeat">
+                <p class=" breadcrumb breadcrumb-title">{{ translate('Hệ thống cửa hàng') }}</p>
+                {% set br = [{'label': translate('Hệ thống cửa hàng'), 'uri': '/he-thong-cua-hang'}] %}
+                {{ render_breadcrumb(br) }}
+            </section>
+            <section class="maps">
+                <div class="form-address section-item row align-items-center">
+                    <h5 class="title_address f-1 text-uppercase mb-0 fw-bold d-block col-xl-4 col-lg-4 col-md-5">{{ translate('Tìm kiếm cửa hàng') }}</h5>
+                    <div id="form-search" class="col-lg-8 col-md-7">
+                        <fieldset class="fieldset row justify-content-end">
+                            <div class="select-box select-city_box col-lg-5 col-md-6">
+                                <select aria-label="customerCity" class="select-city storeSelect select2 form-control" id="customerCityId">
+                                    <option value="">{{ translate('Chọn Tỉnh/ thành phố') }}</option>
+                                    {{ toSelectBox(getCity()) | raw }}
+                                </select>
+                            </div>
+                            <div class="select-box select-district_box col-lg-5 col-md-6">
+                                <select aria-label="customerDistrict" id="customerDistrictId" name="customerDistrictId"
+                                        class="storeSelectDistrict select-district select2 form-control">
+                                    <option value="">{{ translate('Chọn Quận/ Huyện') }}</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div id="content" class="stores p-3">
+                    <div class="row">
+                        <div class="col-xs-12 col-lg-4 col-sm-4 col-md-4">
+                            <div class="address-map">
+                                <div class="address-cont">
+                                    <div class="address-detail">
+                                        <ul id="store-list" class="_depotList agency-list mb-0">
+                                            {% if agencyList is not empty %}
+                                                {% for ag in agencyList %}
+                                                    <li class="_depotItem" data-name="{{ ag.name }}" data-address="{{ ag.address }}"
+                                                        data-lat="{{ ag.latitude }}" data-long="{{ ag.longitude }}">
+                                                        <p>{{ ag.name }}</p>
+                                                        <p>{{ ag.address }}</p>
+                                                        <a>{{ translate('Chỉ đường') }} <i class="fal fa-arrow-circle-right"></i></a>
+                                                    </li>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-lg-8 col-sm-8 col-md-8">
+                            <div class="img-map" id="map-store">
+                                <div id="map" class="map_part">
+                                    <iframe class="_mapDepot" width="100%" height="600" src=""></iframe>
+                                </div>
+                            </div>
+                            <div class="detail-address"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}

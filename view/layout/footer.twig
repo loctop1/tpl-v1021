@@ -1,0 +1,185 @@
+<footer>
+    <div class="footer">
+        <section class="section row footer-content">
+            <div class="col-lg-5 col-md-12 col-12 footer-content_left fContentLeft">
+                <a href="/" class="text-decoration-none">
+                    <img class="fContentLeft-logo img-bg_logo2" width="145" height="55" src="{{ getBusinessLogo() }}" alt="logo">
+                </a>
+                <p style="margin-bottom:10px">{{ getKeyContentValue("SLOGAN") }}</p>
+                <p class="fContentLeft-text">
+                    <span class="fw-bold">{{ translate('Địa chỉ: ') }}</span>
+                    {{ getKeyContentValue("ADDRESS") }}
+                </p>
+                <p class="fContentLeft-text">
+                    <span class="fw-bold">{{ translate('Điện thoại: ') }}</span>
+                    <a href="tel:{{ getKeyContentValue("HOTLINE") }}" class="fw-bold fContentLeft-link">{{ getKeyContentValue("HOTLINE") }}</a>
+                </p>
+                <p class="fContentLeft-text" style="margin-bottom:10px">
+                    <span class="fw-bold">{{ translate('Email: ') }}</span>
+                    <a href="mailto:{{ getKeyContentValue("EMAIL") }}" class="fw-bold fContentLeft-link">{{ getKeyContentValue("EMAIL") }}</a>
+                </p>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12 footer-content_middle fContentMid">
+                <p class="fContentMid-title">{{ getKeyContentValue("FOOTER_TITLE_1") }}</p>
+                    {{ getKeyContentValue('FOOTER_CONTENT_1') | raw }}
+                <ul class="fContentMid-socialLink">
+                    <li class="fContentMid-socialLink_item" >
+                        <a href="" class="social-item" style="background:#1877f2">
+                            <i class="fa-brands fa-xl fa-facebook-f"></i>
+                        </a>
+                    </li>
+                    <li class="fContentMid-socialLink_item">
+                        <a href="" class="social-item" style="background:#55acee">
+                            <i class="fa-brands fa-xl fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li class="fContentMid-socialLink_item">
+                        <a href="" class="social-item" style="background:#b00">
+                            <i class="fa-brands fa-xl fa-youtube"></i>
+                        </a>
+                    </li>
+                    <li class="fContentMid-socialLink_item">
+                        <a href="" class="social-item" style="background:linear-gradient(29.61deg, #f38334 0%, #da2e7d 50.39%, #6b54c6 100%)">
+                            <i class="fa-brands fa-xl fa-instagram"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12 footer-content_right fContentRight">
+                <p class="fContentRight-title">{{ getKeyContentValue("FOOTER_TITLE_2") }}</p>
+                {{ getKeyContentValue('FOOTER_CONTENT_2') | raw }}
+                <ul class="fContentRight-paymentMethod">
+                    <li class="fContentRight-paymentMethod_item" >
+                        <a href="" class="payment-item">
+                            <i class="fa-brands fa-cc-visa fa-2xl"></i>
+                        </a>
+                    </li>
+                    <li class="fContentRight-paymentMethod_item">
+                        <a href="" class="payment-item">
+                            <i class="fa-brands fa-cc-mastercard fa-2xl"></i>
+                        </a>
+                    </li>
+                    <li class="fContentRight-paymentMethod_item">
+                        <a href="" class="payment-item">
+                            <i class="fa-brands fa-cc-jcb fa-2xl"></i>
+                        </a>
+                    </li>
+                    <li class="fContentRight-paymentMethod_item">
+                        <a href="" class="payment-item">
+                            <i class="fa-brands fa-cc-apple-pay fa-2xl"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="section footer-copyright">
+            {% set showTime = showTime({'premiumWebsiteColor': getKeyContentValue('PREMIUM_WEBSITE_COLOR')}) %}
+            <p class="footer-copyright_text" data-runtime='Memory: {{ showTime.memoryUsed }} - Time: {{ showTime.time }} s' id='runtime'
+               style="display: {{ showTime.display }}">
+                {{ translate('Thiết kế website bởi') }}
+                <img src="{{ linkSystemImage('/images/favicon.ico') }}" alt="{{ translate('Thiết kế web bởi NHANH.VN') }}"
+                     title="{{ translate('Thiết kế web bởi NHANH.VN') }}">
+                <a class="logo footer-copyright_link" href="https://nhanh.vn" target="_blank">Nhanh.vn</a>
+            </p>
+            {% if(showTime.premiumWebsite) %}
+                <p style="display:block; text-align: center">
+                    {{ showTime.premiumWebsite | raw }}
+                </p>
+            {% endif %}
+    </section>
+    </div>
+</footer>
+<div id="flash-message-container" class="w-100 h-100 position-fixed left-0 top-0 flash-message-container">
+    <div class="d-flex align-items-center justify-content-center w-100 h-100 ">
+        <div id="flash-message" class="p-4 text-center flash-message">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-success">
+                <rect width="52" height="52" rx="26" fill="#3BA500" fill-opacity="0.08" />
+                <rect x="6" y="6" width="40" height="40" rx="20" fill="#3BA500" fill-opacity="0.08" />
+                <path d="M21.75 26L24.58 28.83L30.25 23.17M26 36C31.5 36 36 31.5 36 26C36 20.5 31.5 16 26 16C20.5 16 16 20.5 16 26C16 31.5 20.5 36 26 36Z" stroke="#3BA500" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="svg-error">
+                <rect width="52" height="52" rx="26" fill="#E81B2B" fill-opacity="0.08" />
+                <rect x="6" y="6" width="40" height="40" rx="20" fill="#E81B2B" fill-opacity="0.08" />
+                <path d="M23.17 28.83L28.83 23.17M28.83 28.83L23.17 23.17M26 36C31.5 36 36 31.5 36 26C36 20.5 31.5 16 26 16C20.5 16 16 20.5 16 26C16 31.5 20.5 36 26 36Z" stroke="#E81B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="message mt-3"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="_quickViewModal" tabindex="-1" >
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal couponDetail" id="couponDetailModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header couponDetail-header justify-content-between">
+                <h5 class="modal-title">{{ translate('Thông tin voucher') }}</h5>
+                <a class="text-white couponDetail-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-regular fa-xmark"></i></a>
+            </div>
+            <div class="modal-body couponDetail-body _modalContent">
+                <ul>
+                    <li>
+                        <span>{{ translate('Mã khuyến mãi:') }}</span>
+                        <span class="code"></span>
+                    </li>
+                    <li>
+                        <span>{{ translate('Điều kiện:') }}</span>
+                        <span class="content"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal couponListModal" id="couponListModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header couponListModal-header justify-content-between">
+                <h5 class="modal-title">{{ translate('Mã khuyến mãi') }}</h5>
+                <a class="text-dark couponDetail-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-regular fa-xmark"></i></a>
+            </div>
+            {% set coupons = getListCoupon({'couponLimit':1}) %}
+            {% if coupons is not empty %}
+            <div class="modal-body couponListModal-body _modalContent">
+                {% for coupon in coupons %}
+                    <div class="couponList-itemBox">
+                        <div class="couponList-item">
+                            <div class="couponList-item_money">{{ coupon.value/1000 }}K</div>
+                            {% if(coupon.couponCode) is not empty %}
+                            {% set c = coupon.couponCode | first %}
+                                <div class="couponList-item_content">
+                                    <div class="couponList-item_contentLeft">
+                                        <p>{{ translate('Mã khuyến mãi: ') }}<span>{{ c.code }}</span></p>
+                                        <p class="s-textLimit" style="--line:1">{{ coupon.description }}</p>
+                                    </div>
+                                    <div class="couponList-item_contentRight">
+                                        <p class="coupon-content_copyBtn" data-coupon="{{ c.code }}">{{ translate('Sao chép mã') }}</p>
+                                        {% if(coupon.description is not empty) %}
+                                            <a class="coupon-content_conditional j-showDesc" data-id="{{ coupon.id }}" href="javascript:void(0)">{{ translate("Điều kiện") }}</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="couponList-desc couponList-desc-{{ coupon.id }}">{{ coupon.description }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>{{ translate('Đã hết mã khuyến mãi') }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalOrderDetails" tabindex="-1" aria-labelledby="modalOrderDetails" >
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body _orderContent">
+
+            </div>
+        </div>
+    </div>
+</div>
